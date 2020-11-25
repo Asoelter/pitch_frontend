@@ -12,4 +12,9 @@ include_directories(third_party/covid)
 target_link_libraries(${PROJECT_NAME} covid)
 target_include_directories(${PROJECT_NAME} PUBLIC thir_party/covid)
 
+add_subdirectory(third_party/projectY)
+include_directories(third_party/projectY)
+target_link_libraries(${PROJECT_NAME} projectY)
+target_include_directories(${PROJECT_NAME} PUBLIC thir_party/projectY)
+
 target_link_libraries(${PROJECT_NAME} Ws2_32.lib)

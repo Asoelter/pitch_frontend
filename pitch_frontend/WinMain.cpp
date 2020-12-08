@@ -59,9 +59,9 @@ INT WinMain(HINSTANCE hInstance,
     glfwSetFramebufferSizeCallback(window, onResize);
 
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
-         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f
+        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, //bottom left
+         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, //bottom right
+         0.0f,  0.5f, 0.0f,  0.5f, 1.0f  //top
     };
 
     VertexArrayObject vao;
@@ -77,12 +77,13 @@ INT WinMain(HINSTANCE hInstance,
     const char* vertexShaderSource =
         "#version 330 core\n"
         "layout (location = 0) in vec3 pos;\n"
-        "layout (location = 1) in vec3 vertexColor;\n"
-        "out vec3 fragmentColor;\n"
+        "layout (location = 1) in vec2 vertTextureCoords;\n"
+        "\n"
+        "out vec2 fragTextureCoords;\n"
         "void main()\n"
         "{\n"
         "   gl_Position = vec4(pos, 1.0);\n"
-        "   fragmentColor = vertexColor;\n"
+        "   fragTextureCoords = vertTextureCoords;\n"
         "}\0";
 
     const auto vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -104,10 +105,11 @@ INT WinMain(HINSTANCE hInstance,
     const char* fragmentShaderSource =
         "#version 330 core\n"
         "out vec4 outColor;\n"
-        "in vec3 fragmentColor;\n"
+        "in vec2 fragTextureCoords;\n"
+        "uniform sampler2D fragTexture;\n"
         "void main()\n"
         "{\n"
-        "   outColor = vec4(fragmentColor, 1.0f);\n"
+        "   outColor = texture(fragTexture, fragTextureCoords);\n"
         "}\0";
 
     const auto fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -140,15 +142,11 @@ INT WinMain(HINSTANCE hInstance,
         MsgBox("Shader program failed to link", errorMessage.c_str());
     }
 
-    //6 * sizeof(float) = size in bytes until the next vertex attribute of the same type
-    //(void*)(3 * sizeof(float) = how far this index is away from the start
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr); //applies to most recently bound vbo
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float))); //applies to most recently bound vbo
-    glEnableVertexAttribArray(1);
-
     //Texture code
+    unsigned int textureId;
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -157,7 +155,7 @@ INT WinMain(HINSTANCE hInstance,
     int textureWidth;
     int textureHeight;
     int channelCount;
-    const auto filePath = "../../../../pitch_frontend/res/textures/king_of_hearts.jpg";
+    const auto filePath = "../../../../pitch_frontend/res/textures/king_of_hearts.png";
     unsigned char* textureData = stbi_load(filePath, &textureWidth, &textureHeight, &channelCount, 0);
 
     if(!textureData)
@@ -165,6 +163,20 @@ INT WinMain(HINSTANCE hInstance,
         MsgBox("error", "Failed to load texture data");
         return -1;
     }
+
+    //NOTE: Use GL_GRBA to png files, GL_GRB for jpg
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    stbi_image_free(textureData);
+
+    //6 * sizeof(float) = size in bytes until the next vertex attribute of the same type
+    //(void*)(3 * sizeof(float) = how far this index is away from the start
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr); //applies to most recently bound vbo
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); //applies to most recently bound vbo
+    glEnableVertexAttribArray(1);
 
     while(!glfwWindowShouldClose(window))
     {
@@ -177,6 +189,7 @@ INT WinMain(HINSTANCE hInstance,
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgramId);
+        glBindTexture(GL_TEXTURE_2D, textureId);
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 3);
     }

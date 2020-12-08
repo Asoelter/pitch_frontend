@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (pitch_frontend WIN32 "WinMain.cpp" "third_party/stb/stb_image.h")
+add_executable (pitch_frontend WIN32 "WinMain.cpp")
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
 add_subdirectory(third_party/covid)

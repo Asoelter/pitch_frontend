@@ -15,6 +15,7 @@
 #include <GLFW/glfw3.h>
 
 #include "core/graphics/vertex_array_object.h"
+#include "core/graphics/vertex_buffer_object.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -58,20 +59,30 @@ INT WinMain(HINSTANCE hInstance,
 
     glfwSetFramebufferSizeCallback(window, onResize);
 
-    float vertices[] = {
+    std::vector<float> vertices = {
         -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, //bottom left
          0.5f, -0.5f, 0.0f,  1.0f, 0.0f, //bottom right
-         0.0f,  0.5f, 0.0f,  0.5f, 1.0f  //top
+        -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, //top left
+
+         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, //bottom right
+         0.5f,  0.5f, 0.0f,  1.0f, 1.0f, //top right
+        -0.5f,  0.5f, 0.0f,  0.0f, 1.0f //top left
     };
+
 
     VertexArrayObject vao;
 
+    std::vector<unsigned> valuesPerAttribute = { 3, 2 };
+    VertexBufferObject bestVbo(vertices, valuesPerAttribute);
+
     //Vertex buffer object code
+#if 0
     unsigned vbo;
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+#endif
 
     //Vertex Shader code
     const char* vertexShaderSource =
@@ -84,7 +95,7 @@ INT WinMain(HINSTANCE hInstance,
         "{\n"
         "   gl_Position = vec4(pos, 1.0);\n"
         "   fragTextureCoords = vertTextureCoords;\n"
-        "}\0";
+        "}";
 
     const auto vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShaderId, 1, &vertexShaderSource, nullptr);
@@ -110,7 +121,7 @@ INT WinMain(HINSTANCE hInstance,
         "void main()\n"
         "{\n"
         "   outColor = texture(fragTexture, fragTextureCoords);\n"
-        "}\0";
+        "}";
 
     const auto fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShaderId, 1, &fragmentShaderSource, nullptr);
@@ -170,6 +181,7 @@ INT WinMain(HINSTANCE hInstance,
 
     stbi_image_free(textureData);
 
+#if 0
     //6 * sizeof(float) = size in bytes until the next vertex attribute of the same type
     //(void*)(3 * sizeof(float) = how far this index is away from the start
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr); //applies to most recently bound vbo
@@ -177,6 +189,7 @@ INT WinMain(HINSTANCE hInstance,
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); //applies to most recently bound vbo
     glEnableVertexAttribArray(1);
+#endif
 
     while(!glfwWindowShouldClose(window))
     {
@@ -191,7 +204,7 @@ INT WinMain(HINSTANCE hInstance,
         glUseProgram(shaderProgramId);
         glBindTexture(GL_TEXTURE_2D, textureId);
         vao.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
     glfwTerminate();

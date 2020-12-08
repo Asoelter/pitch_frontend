@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-unsigned int VertexArrayObject::currentlyBoundVao_ = noVaoIsBound_;
+unsigned int VertexArrayObject::currentlyBoundId = none;
 
 VertexArrayObject::VertexArrayObject()
     : vao_(0)
@@ -20,15 +20,15 @@ void VertexArrayObject::bind()
 {
     glBindVertexArray(vao_);
 
-    currentlyBoundVao_ = vao_;
+    currentlyBoundId = vao_;
 }
 
 void VertexArrayObject::unbind()
 {
     glBindVertexArray(0);
 
-    if(vao_ == currentlyBoundVao_)
+    if(vao_ == currentlyBoundId)
     {
-        currentlyBoundVao_ = noVaoIsBound_;
+        currentlyBoundId = none;
     }
 }

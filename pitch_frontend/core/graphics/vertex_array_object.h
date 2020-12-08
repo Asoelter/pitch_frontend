@@ -20,8 +20,8 @@ public:
     static bool boundVaoExists() noexcept;
 
 private:
-    static constexpr unsigned int noVaoIsBound_ = std::numeric_limits<unsigned int>::max();
-    static unsigned int currentlyBoundVao_;
+    static constexpr auto none = std::numeric_limits<unsigned int>::max();
+    static unsigned int currentlyBoundId;
     unsigned int vao_;
 };
 

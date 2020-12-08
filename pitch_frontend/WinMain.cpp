@@ -14,8 +14,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-//#include <core/graphics/vertex_array_object.h>
 #include "core/graphics/vertex_array_object.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 void MsgBox(const char* title, const char* message)
 {
@@ -57,15 +59,11 @@ INT WinMain(HINSTANCE hInstance,
     glfwSetFramebufferSizeCallback(window, onResize);
 
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
+        -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
+         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f
     };
 
-    //vao code
-    //unsigned int vao;
-    //glGenVertexArrays(1, &vao);
-    //glBindVertexArray(vao);
     VertexArrayObject vao;
 
     //Vertex buffer object code
@@ -79,9 +77,12 @@ INT WinMain(HINSTANCE hInstance,
     const char* vertexShaderSource =
         "#version 330 core\n"
         "layout (location = 0) in vec3 pos;\n"
+        "layout (location = 1) in vec3 vertexColor;\n"
+        "out vec3 fragmentColor;\n"
         "void main()\n"
         "{\n"
         "   gl_Position = vec4(pos, 1.0);\n"
+        "   fragmentColor = vertexColor;\n"
         "}\0";
 
     const auto vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -102,12 +103,11 @@ INT WinMain(HINSTANCE hInstance,
     //Fragment shader code
     const char* fragmentShaderSource =
         "#version 330 core\n"
-        "out vec4 fragmentColor;\n"
-        "uniform vec4 uColor;\n"
+        "out vec4 outColor;\n"
+        "in vec3 fragmentColor;\n"
         "void main()\n"
         "{\n"
-        //"   fragmentColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-        "   fragmentColor = uColor;\n"
+        "   outColor = vec4(fragmentColor, 1.0f);\n"
         "}\0";
 
     const auto fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -140,8 +140,31 @@ INT WinMain(HINSTANCE hInstance,
         MsgBox("Shader program failed to link", errorMessage.c_str());
     }
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr); //applies to most recently bound vbo
+    //6 * sizeof(float) = size in bytes until the next vertex attribute of the same type
+    //(void*)(3 * sizeof(float) = how far this index is away from the start
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr); //applies to most recently bound vbo
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float))); //applies to most recently bound vbo
+    glEnableVertexAttribArray(1);
+
+    //Texture code
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    int textureWidth;
+    int textureHeight;
+    int channelCount;
+    const auto filePath = "../../../../pitch_frontend/res/textures/king_of_hearts.jpg";
+    unsigned char* textureData = stbi_load(filePath, &textureWidth, &textureHeight, &channelCount, 0);
+
+    if(!textureData)
+    {
+        MsgBox("error", "Failed to load texture data");
+        return -1;
+    }
 
     while(!glfwWindowShouldClose(window))
     {
@@ -154,9 +177,6 @@ INT WinMain(HINSTANCE hInstance,
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgramId);
-        const auto colorLocation = glGetUniformLocation(shaderProgramId, "uColor");
-        glUniform4f(colorLocation, 0.2f, 0.3f, 0.2f, 1.0f);
-        //glBindVertexArray(vao);
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 3);
     }

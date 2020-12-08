@@ -12,11 +12,6 @@ include_directories(third_party/covid)
 target_link_libraries(${PROJECT_NAME} covid)
 target_include_directories(${PROJECT_NAME} PUBLIC thir_party/covid)
 
-#add_subdirectory(third_party/wui)
-#include_directories(third_party/wui)
-#target_link_libraries(${PROJECT_NAME} wui)
-#target_include_directories(${PROJECT_NAME} PUBLIC thir_party/wui)
-
 add_subdirectory(third_party/glfw)
 include_directories(third_party/glfw)
 target_link_libraries(${PROJECT_NAME} glfw)

@@ -16,6 +16,7 @@
 
 #include "core/graphics/vertex_array_object.h"
 #include "core/graphics/vertex_buffer_object.h"
+#include "core/graphics/window.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -33,6 +34,7 @@ INT WinMain(HINSTANCE hInstance,
     PSTR lpCmdLine,
     INT nCmdShow)
 {
+#if 0
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -58,6 +60,9 @@ INT WinMain(HINSTANCE hInstance,
     glViewport(0, 0, 800, 600);
 
     glfwSetFramebufferSizeCallback(window, onResize);
+#endif
+
+    Window window(800, 600, "Pitch");
 
     std::vector<float> vertices = {
         -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, //bottom left
@@ -69,20 +74,10 @@ INT WinMain(HINSTANCE hInstance,
         -0.5f,  0.5f, 0.0f,  0.0f, 1.0f //top left
     };
 
+    std::vector<unsigned> valuesPerAttribute = { 3, 2 };
 
     VertexArrayObject vao;
-
-    std::vector<unsigned> valuesPerAttribute = { 3, 2 };
     VertexBufferObject bestVbo(vertices, valuesPerAttribute);
-
-    //Vertex buffer object code
-#if 0
-    unsigned vbo;
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-#endif
 
     //Vertex Shader code
     const char* vertexShaderSource =
@@ -181,16 +176,21 @@ INT WinMain(HINSTANCE hInstance,
 
     stbi_image_free(textureData);
 
+    while(window.isOpen())
+    {
+        window.beginFrame();
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(shaderProgramId);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        vao.bind();
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        window.endFrame();
+    }
+
 #if 0
-    //6 * sizeof(float) = size in bytes until the next vertex attribute of the same type
-    //(void*)(3 * sizeof(float) = how far this index is away from the start
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr); //applies to most recently bound vbo
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); //applies to most recently bound vbo
-    glEnableVertexAttribArray(1);
-#endif
-
     while(!glfwWindowShouldClose(window))
     {
         processInput(window);
@@ -206,6 +206,7 @@ INT WinMain(HINSTANCE hInstance,
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
+#endif
 
     glfwTerminate();
 
@@ -224,50 +225,3 @@ void processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
     }
 }
-
-#if 0
-INT WinMain(HINSTANCE hInstance,
-    HINSTANCE hPrevInstance,
-    PSTR lpCmdLine,
-    INT nCmdShow)
-{
-    auto window = gui::Window(math::Rectangle::defaultPosition(700, 400), "Pitch");
-    auto createButton = gui::Button(gui::Button::Descriptor(230, 100, 200, 90, "Create"));
-    connect(createButton.pushed, Slot<>([]() {MsgBox("pushed", "pushed"); }));
-    window.attach(std::move(createButton));
-
-    auto renderer = Renderer(window);
-    auto camera = firstQuadOrthoCamera(8.0f, 8.0f, 2.0f);
-
-    std::vector vertices =
-    {
-        PVertex{DirectX::XMFLOAT4{ 2.0f, 4.0f, 1.0f, 1.0f}},
-        PVertex{DirectX::XMFLOAT4{ 4.0f, 0.0f, 1.0f, 1.0f}},
-        PVertex{DirectX::XMFLOAT4{ 0.0f, 0.0f, 1.0f, 1.0f}}
-    };
-    auto vshader = VertexShader(shaderSource(L"solid_vertex.hlsl"));
-    auto pshader = PixelShader(shaderSource(L"solid_pixel.hlsl"));
-    renderer.bindVertexShader(vshader);
-    renderer.bindPixelShader(pshader);
-
-    Color color = Color::LightGrey();
-
-    Mesh mesh(vertices);
-
-    connect(gui::Keyboard::upArrowKeyPressed,    Slot<>([&mesh]() {mesh.translate(0.0f, 0.03f); }));
-    connect(gui::Keyboard::rightArrowKeyPressed, Slot<>([&mesh]() {mesh.translate(0.03f, 0.0f); }));
-    connect(gui::Keyboard::downArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(0.0f, -0.03f); }));
-    connect(gui::Keyboard::leftArrowKeyPressed,  Slot<>([&mesh]() {mesh.translate(-0.03f, 0.0f); }));
-
-    while(window.isOpen())
-    {
-        window.update();
-        renderer.beginFrame(color);
-        renderer.bindCamera(camera);
-        renderer.draw(mesh);
-        renderer.endFrame();
-    }
-
-    return 0;
-}
-#endif

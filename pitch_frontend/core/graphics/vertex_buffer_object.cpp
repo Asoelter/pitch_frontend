@@ -4,12 +4,9 @@
 
 #include <numeric>
 
-unsigned VertexBufferObject::currentlyBoundId = none;
-
 VertexBufferObject::VertexBufferObject(const std::vector<float>& values, const std::vector<unsigned>& valuesPerAttribute)
-    : id_(none)
+    : id_(0)
 {
-#pragma message("NOTE: If you get odd stuff, check if sending too much data is the problem")
     glGenBuffers(1, &id_);
     glBindBuffer(GL_ARRAY_BUFFER, id_);
     glBufferData(GL_ARRAY_BUFFER, values.size() * sizeof(float), values.data(), GL_STATIC_DRAW);
@@ -20,10 +17,14 @@ VertexBufferObject::VertexBufferObject(const std::vector<float>& values, const s
     {
         const auto valuesBeforeThisAttribute = std::accumulate(&valuesPerAttribute[0], &valuesPerAttribute[i], 0);
 
-        glVertexAttribPointer(i, valuesPerAttribute[i], GL_FLOAT, GL_FALSE, valuesPerIndex * sizeof(float), 
+        glVertexAttribPointer(static_cast<GLuint>(i), 
+                              valuesPerAttribute[i], 
+                              GL_FLOAT, 
+                              GL_FALSE, 
+                              valuesPerIndex * sizeof(float), 
                               reinterpret_cast<void*>(valuesBeforeThisAttribute * sizeof(float)));
 
-        glEnableVertexAttribArray(i);
+        glEnableVertexAttribArray(static_cast<GLuint>(i));
     }
 }
 

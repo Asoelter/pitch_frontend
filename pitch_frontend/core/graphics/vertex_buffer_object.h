@@ -21,8 +21,6 @@ public:
     void unbind() noexcept;
 
 private:
-    static constexpr auto none = std::numeric_limits<unsigned>::max();
-    static unsigned currentlyBoundId;
     unsigned id_;
 };
 

@@ -5,7 +5,8 @@ project("graphics")
 # Add source to this project's executable.
 add_library(${PROJECT_NAME} "vertex_array_object.h"		"vertex_array_object.cpp" 
 							"vertex_buffer_object.h"	"vertex_buffer_object.cpp" 
-							"window.h"					"window.cpp" "shader.cpp")
+							"window.h"					"window.cpp" "shader.cpp" 
+							"shader_program.h"			"shader_program.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../../third_party)
 

@@ -15,6 +15,7 @@
 #include <GLFW/glfw3.h>
 
 #include "core/graphics/shader.h"
+#include "core/graphics/shader_program.h"
 #include "core/graphics/vertex_array_object.h"
 #include "core/graphics/vertex_buffer_object.h"
 #include "core/graphics/window.h"
@@ -64,39 +65,7 @@ INT WinMain(HINSTANCE hInstance,
         "}"
     );
 
-# if 0
-    //Vertex Shader code
-    const char* vertexShaderSource =
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 pos;\n"
-        "layout (location = 1) in vec2 vertTextureCoords;\n"
-        "\n"
-        "out vec2 fragTextureCoords;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = vec4(pos, 1.0);\n"
-        "   fragTextureCoords = vertTextureCoords;\n"
-        "}";
-
-    const auto vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShaderId, 1, &vertexShaderSource, nullptr);
-    glCompileShader(vertexShaderId);
-
-    int success = 0;
-    char infoLog[512];
-    glGetShaderiv(vertexShaderId, GL_COMPILE_STATUS, &success);
-
-    if(!success)
-    {
-        glGetShaderInfoLog(vertexShaderId, 512, nullptr, infoLog);
-        const auto errorMessage = std::string("Vertex shader failed to compile: ") + infoLog;
-        MsgBox("Vertex shader failed to compile", errorMessage.c_str());
-    }
-
-#endif
-
-    //Fragment shader code
-    const char* fragmentShaderSource =
+    FragmentShader fragmentShader(
         "#version 330 core\n"
         "out vec4 outColor;\n"
         "in vec2 fragTextureCoords;\n"
@@ -104,39 +73,30 @@ INT WinMain(HINSTANCE hInstance,
         "void main()\n"
         "{\n"
         "   outColor = texture(fragTexture, fragTextureCoords);\n"
-        "}";
+        "}"
+    );
 
-    const auto fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShaderId, 1, &fragmentShaderSource, nullptr);
-    glCompileShader(fragmentShaderId);
-
-    int success;
-    char infoLog[512];
-    glGetShaderiv(fragmentShaderId, GL_COMPILE_STATUS, &success);
-
-    if(!success)
-    {
-        glGetShaderInfoLog(fragmentShaderId, 512, nullptr, infoLog);
-        const auto errorMessage = std::string("Fragment shader failed to compile: ") + infoLog;
-        MsgBox("Fragment shader failed to compile", errorMessage.c_str());
-    }
-
+    ShaderProgram program(std::move(vertexShader), std::move(fragmentShader));
+# if 0
     //Shader program code
     const auto shaderProgramId = glCreateProgram();
     glAttachShader(shaderProgramId, vertexShader.id());
-    glAttachShader(shaderProgramId, fragmentShaderId);
+    glAttachShader(shaderProgramId, fragmentShader.id());
     glLinkProgram(shaderProgramId);
     glDeleteShader(vertexShader.id());
-    glDeleteShader(fragmentShaderId);
+    glDeleteShader(fragmentShader.id());
 
+    int success;
     glGetProgramiv(shaderProgramId, GL_LINK_STATUS, &success);
 
     if(!success)
     {
+        char infoLog[512];
         glGetShaderInfoLog(shaderProgramId, 512, nullptr, infoLog);
         const auto errorMessage = std::string("Shader program failed to link: ") + infoLog;
         MsgBox("Shader program failed to link", errorMessage.c_str());
     }
+#endif
 
     //Texture code
     unsigned int textureId;
@@ -172,7 +132,8 @@ INT WinMain(HINSTANCE hInstance,
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgramId);
+        //glUseProgram(shaderProgramId);
+        program.bind();
         glBindTexture(GL_TEXTURE_2D, textureId);
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 6);

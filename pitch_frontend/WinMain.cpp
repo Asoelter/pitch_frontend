@@ -37,7 +37,7 @@ INT WinMain(HINSTANCE hInstance,
 {
     Window window(800, 600, "Pitch");
 
-    std::vector<float> vertices = {
+    const std::vector<float> vertices = {
         -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, //bottom left
          0.5f, -0.5f, 0.0f,  1.0f, 0.0f, //bottom right
         -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, //top left
@@ -47,56 +47,14 @@ INT WinMain(HINSTANCE hInstance,
         -0.5f,  0.5f, 0.0f,  0.0f, 1.0f //top left
     };
 
-    std::vector<unsigned> valuesPerAttribute = { 3, 2 };
+    const std::vector<unsigned> valuesPerAttribute = { 3, 2 };
 
     VertexArrayObject vao;
     VertexBufferObject vbo(vertices, valuesPerAttribute);
 
-    VertexShader vertexShader(
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 pos;\n"
-        "layout (location = 1) in vec2 vertTextureCoords;\n"
-        "\n"
-        "out vec2 fragTextureCoords;\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = vec4(pos, 1.0);\n"
-        "   fragTextureCoords = vertTextureCoords;\n"
-        "}"
-    );
-
-    FragmentShader fragmentShader(
-        "#version 330 core\n"
-        "out vec4 outColor;\n"
-        "in vec2 fragTextureCoords;\n"
-        "uniform sampler2D fragTexture;\n"
-        "void main()\n"
-        "{\n"
-        "   outColor = texture(fragTexture, fragTextureCoords);\n"
-        "}"
-    );
-
+    VertexShader vertexShader(readFile("../../../../pitch_frontend/res/shaders/position_texture_vertex.glsl"));
+    FragmentShader fragmentShader(readFile("../../../../pitch_frontend/res/shaders/position_texture_fragment.glsl"));
     ShaderProgram program(std::move(vertexShader), std::move(fragmentShader));
-# if 0
-    //Shader program code
-    const auto shaderProgramId = glCreateProgram();
-    glAttachShader(shaderProgramId, vertexShader.id());
-    glAttachShader(shaderProgramId, fragmentShader.id());
-    glLinkProgram(shaderProgramId);
-    glDeleteShader(vertexShader.id());
-    glDeleteShader(fragmentShader.id());
-
-    int success;
-    glGetProgramiv(shaderProgramId, GL_LINK_STATUS, &success);
-
-    if(!success)
-    {
-        char infoLog[512];
-        glGetShaderInfoLog(shaderProgramId, 512, nullptr, infoLog);
-        const auto errorMessage = std::string("Shader program failed to link: ") + infoLog;
-        MsgBox("Shader program failed to link", errorMessage.c_str());
-    }
-#endif
 
     //Texture code
     unsigned int textureId;
@@ -132,7 +90,6 @@ INT WinMain(HINSTANCE hInstance,
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        //glUseProgram(shaderProgramId);
         program.bind();
         glBindTexture(GL_TEXTURE_2D, textureId);
         vao.bind();

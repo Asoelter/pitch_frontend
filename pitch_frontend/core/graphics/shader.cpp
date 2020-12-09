@@ -11,7 +11,7 @@ Shader::Shader(const std::string& text, unsigned shaderType)
     init(text, shaderType);
 }
 
-Shader::Shader(Shader&& rhs)
+Shader::Shader(Shader&& rhs) noexcept
 {
     id_ = rhs.id_;
     rhs.id_ = 0;
@@ -22,7 +22,7 @@ Shader::~Shader()
     glDeleteShader(id_);
 }
 
-Shader& Shader::operator=(Shader&& rhs)
+Shader& Shader::operator=(Shader&& rhs) noexcept
 {
     id_ = rhs.id_;
     rhs.id_ = 0;

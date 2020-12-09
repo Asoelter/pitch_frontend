@@ -11,6 +11,7 @@ std::string readFile(const std::string& fileName)
     while(std::getline(fin, reader))
     {
         result.append(reader);
+        result.push_back('\n');
     }
 
     return result;

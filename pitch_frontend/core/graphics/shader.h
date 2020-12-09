@@ -8,11 +8,11 @@ class Shader
 public:
     Shader(const std::string& text, unsigned shaderType);
     Shader(const Shader& rhs) = delete;
-    Shader(Shader&& rhs);
+    Shader(Shader&& rhs) noexcept;
     virtual ~Shader();
 
     Shader& operator=(const Shader& rhs) = delete;
-    Shader& operator=(Shader&& rhs);
+    Shader& operator=(Shader&& rhs) noexcept;
 
     unsigned id() const noexcept;
 

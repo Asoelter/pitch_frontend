@@ -22,8 +22,12 @@
 
 #include "core/util/file_io.h"
 
+#ifdef FREE_CODE
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#else
+#include "util/file_io.h"
+#endif
 
 void MsgBox(const char* title, const char* message)
 {
@@ -66,23 +70,12 @@ INT WinMain(HINSTANCE hInstance,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    int textureWidth;
-    int textureHeight;
-    int channelCount;
     const auto filePath = "../../../../pitch_frontend/res/textures/king_of_hearts.png";
-    unsigned char* textureData = stbi_load(filePath, &textureWidth, &textureHeight, &channelCount, 0);
-
-    if(!textureData)
-    {
-        MsgBox("error", "Failed to load texture data");
-        return -1;
-    }
+    const auto textureInfo = loadTextureInfo(filePath);
 
     //NOTE: Use GL_GRBA for png files, GL_GRB for jpg
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureInfo.width, textureInfo.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureInfo.data);
     glGenerateMipmap(GL_TEXTURE_2D);
-
-    stbi_image_free(textureData);
 
     while(window.isOpen())
     {

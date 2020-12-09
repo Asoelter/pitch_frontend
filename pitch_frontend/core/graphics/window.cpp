@@ -38,6 +38,10 @@ Window::~Window()
     {
         glfwDestroyWindow(window_);
     }
+
+    //This means we only support one window, consider
+    //if that is what we actually want
+    glfwTerminate(); 
 }
 
 void Window::beginFrame() noexcept

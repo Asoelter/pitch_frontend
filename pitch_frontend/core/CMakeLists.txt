@@ -11,5 +11,6 @@ function(addDirectory dir)
 	target_include_directories(${PROJECT_NAME} INTERFACE ${dir})
 endfunction()
 
-addDirectory(graphics)
+ADDDIRECTORY(graphics)
+ADDDIRECTORY(util)
 

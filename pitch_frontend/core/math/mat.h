@@ -5,6 +5,14 @@ template<size_t N, size_t M>
 class Mat
 {
 public:
+    constexpr Mat();
+    constexpr Mat(const Mat& rhs);
+    constexpr Mat(Mat&& rhs);
+    ~Mat() = default;
+
+    constexpr Mat identity() const;
+    constexpr Mat translate() const;
+    constexpr Mat rotate() const;
 
 private:
     float data_[N][M];

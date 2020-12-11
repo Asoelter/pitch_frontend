@@ -12,6 +12,7 @@ public:
 
     constexpr Vec(const Vec<Size>& rhs);
     constexpr Vec(Vec<Size>&& rhs);
+    ~Vec() = default;
 
     constexpr Vec& operator=(const Vec<Size>& rhs);
     constexpr Vec& operator=(Vec<Size>&& rhs) noexcept;

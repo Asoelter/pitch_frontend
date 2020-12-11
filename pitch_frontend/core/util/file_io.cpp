@@ -1,6 +1,7 @@
 #include "file_io.h"
 
 #include <algorithm>
+#include <string.h>
 #include <fstream>
 
 #ifndef STB_IMAGE_IMPLEMENTATION
@@ -9,6 +10,72 @@
 #endif
 
 #include "algorithm.h"
+
+TextureInfo::TextureInfo(const TextureInfo& rhs)
+{
+    width = rhs.width;
+    height = rhs.height;
+    channelCount = rhs.channelCount;
+    fileType = rhs.fileType;
+
+    if(rhs.data)
+    {
+        const auto size = std::strlen(reinterpret_cast<const char*>(rhs.data));
+        data = new unsigned char[size];
+        std::strcpy(reinterpret_cast<char*>(data), reinterpret_cast<char*>(rhs.data));
+    }
+}
+
+TextureInfo::TextureInfo(TextureInfo&& rhs)
+{
+    width = rhs.width;
+    height = rhs.height;
+    channelCount = rhs.channelCount;
+    fileType = rhs.fileType;
+    data = rhs.data;
+    rhs.data = nullptr;
+}
+
+TextureInfo::~TextureInfo()
+{
+    if (data)
+    {
+        stbi_image_free(data);
+    }
+}
+
+TextureInfo& TextureInfo::operator=(const TextureInfo& rhs)
+{
+    if(&rhs == this)
+    {
+        return *this;
+    }
+
+    width = rhs.width;
+    height = rhs.height;
+    channelCount = rhs.channelCount;
+    fileType = rhs.fileType;
+
+    if(rhs.data)
+    {
+        data = new unsigned char[std::strlen(reinterpret_cast<const char*>(rhs.data))];
+        std::strcpy(reinterpret_cast<char*>(data), reinterpret_cast<char*>(rhs.data));
+    }
+
+    return *this;
+}
+
+TextureInfo& TextureInfo::operator=(TextureInfo&& rhs) noexcept
+{
+    width = rhs.width;
+    height = rhs.height;
+    channelCount = rhs.channelCount;
+    fileType = rhs.fileType;
+    data = rhs.data;
+    rhs.data = nullptr;
+
+    return *this;
+}
 
 std::string readFile(const std::string& fileName)
 {
@@ -68,7 +135,7 @@ TextureInfo loadTextureInfo(const std::string& fileName)
 
     if(!result.data)
     {
-        //throw std::runtime_error("Failed to load texture data");
+        throw std::runtime_error("Failed to load texture data");
     }
 
     result.fileType = typeOf(fileName);

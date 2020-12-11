@@ -16,6 +16,7 @@
 
 #include "core/graphics/shader.h"
 #include "core/graphics/shader_program.h"
+#include "core/graphics/texture.h"
 #include "core/graphics/vertex_array_object.h"
 #include "core/graphics/vertex_buffer_object.h"
 #include "core/graphics/window.h"
@@ -60,6 +61,7 @@ INT WinMain(HINSTANCE hInstance,
     FragmentShader fragmentShader(readFile("../../../../pitch_frontend/res/shaders/position_texture_fragment.glsl"));
     ShaderProgram program(std::move(vertexShader), std::move(fragmentShader));
 
+#if 0
     //Texture code
     unsigned int textureId;
     glGenTextures(1, &textureId);
@@ -76,6 +78,11 @@ INT WinMain(HINSTANCE hInstance,
     //NOTE: Use GL_GRBA for png files, GL_GRB for jpg
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureInfo.width, textureInfo.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureInfo.data);
     glGenerateMipmap(GL_TEXTURE_2D);
+#endif
+
+    const auto filePath = "../../../../pitch_frontend/res/textures/king_of_hearts.png";
+    const auto textureInfo = loadTextureInfo(filePath);
+    auto texture = Texture(textureInfo);
 
     while(window.isOpen())
     {
@@ -84,7 +91,8 @@ INT WinMain(HINSTANCE hInstance,
         glClear(GL_COLOR_BUFFER_BIT);
 
         program.bind();
-        glBindTexture(GL_TEXTURE_2D, textureId);
+        //glBindTexture(GL_TEXTURE_2D, textureId);
+        texture.bind();
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 6);
 

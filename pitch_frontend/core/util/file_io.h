@@ -1,7 +1,6 @@
 #ifndef FILE_IO_H
 #define FILE_IO_H
 
-#include <memory>
 #include <string>
 
 enum class FileType
@@ -13,6 +12,14 @@ enum class FileType
 
 struct TextureInfo
 {
+    TextureInfo() = default;
+    TextureInfo(const TextureInfo& rhs);
+    TextureInfo(TextureInfo&& rhs);
+    ~TextureInfo();
+
+    TextureInfo& operator=(const TextureInfo& rhs);
+    TextureInfo& operator=(TextureInfo&& rhs) noexcept;
+
     unsigned char* data;
     int width;
     int height;

@@ -1,6 +1,8 @@
 #ifndef SHADER_PROGRAM_H
 #define SHADER_PROGRAM_H
 
+#include "../math/vec.h"
+
 #include "shader.h"
 
 class ShaderProgram
@@ -16,6 +18,9 @@ public:
 
     void bind() noexcept;
     void unbind() noexcept;
+
+    void setUniform(const std::string& name, float value);
+    void setUniform(const std::string& name, const Vec3& value);
 
 private:
     void init(VertexShader&& vertexShader, FragmentShader&& fragmentShader) noexcept;

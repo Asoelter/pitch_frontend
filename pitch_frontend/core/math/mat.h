@@ -1,6 +1,8 @@
 #ifndef MAT_H
 #define MAT_H
 
+#include "vec.h"
+
 template<size_t N, size_t M>
 class Mat
 {
@@ -10,13 +12,24 @@ public:
     constexpr Mat(Mat&& rhs);
     ~Mat() = default;
 
-    constexpr Mat identity() const;
-    constexpr Mat translate() const;
-    constexpr Mat rotate() const;
+    constexpr Mat& operator=(const Mat& rhs);
+    constexpr Mat& operator=(Mat&& rhs);
+
+    constexpr Mat operator+(const Mat& rhs);
+    constexpr Mat& operator+=(const Mat& rhs);
+    
+    constexpr Mat operator*(const Mat& rhs);
+    constexpr Mat& operator*=(const Mat& rhs);
+
+    static constexpr Mat identity();
+    static constexpr Mat translate(const Vec<N>& displacement);
+    static constexpr Mat rotate();
 
 private:
     float data_[N][M];
 };
+
+#include "mat.hpp"
 
 using Mat2 = Mat<2, 2>;
 using Mat3 = Mat<3, 3>;

@@ -35,6 +35,18 @@ void ShaderProgram::unbind() noexcept
     glUseProgram(0);
 }
 
+void ShaderProgram::setUniform(const std::string& name, float value)
+{
+    const auto location = glGetUniformLocation(id_, name.c_str());
+    glUniform1f(location, value);
+}
+
+void ShaderProgram::setUniform(const std::string& name, const Vec3& value)
+{
+    const auto location = glGetUniformLocation(id_, name.c_str());
+    glUniform3f(location, value.x(), value.y(), value.z());
+}
+
 void ShaderProgram::init(VertexShader&& vertexShader, FragmentShader&& fragmentShader) noexcept
 {
     //Bind the shaders to local variables so that their destructors will

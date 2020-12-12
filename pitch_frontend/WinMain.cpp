@@ -24,6 +24,7 @@
 #include "core/graphics/window.h"
 
 #include "core/math/vec.h"
+#include "core/math/mat.h"
 
 #include "core/util/file_io.h"
 
@@ -32,6 +33,7 @@ INT WinMain(HINSTANCE hInstance,
             PSTR      lpCmdLine,
             INT       nCmdShow)
 {
+
     Window window(800, 600, "Pitch");
 
     const std::vector<float> vertices = {
@@ -41,7 +43,7 @@ INT WinMain(HINSTANCE hInstance,
 
          0.5f, -0.5f, 0.0f,  1.0f, 0.0f, //bottom right
          0.5f,  0.5f, 0.0f,  1.0f, 1.0f, //top right
-        -0.5f,  0.5f, 0.0f,  0.0f, 1.0f //top left
+        -0.5f,  0.5f, 0.0f,  0.0f, 1.0f  //top left
     };
 
     const std::vector<unsigned> valuesPerAttribute = { 3, 2 };
@@ -64,7 +66,7 @@ INT WinMain(HINSTANCE hInstance,
         glClear(GL_COLOR_BUFFER_BIT);
 
         program.bind();
-        //glBindTexture(GL_TEXTURE_2D, textureId);
+        program.setUniform("offset", 0.5f);
         texture.bind();
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 6);

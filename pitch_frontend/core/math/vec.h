@@ -31,6 +31,8 @@ public:
     [[nodiscard]] constexpr float operator[](size_t index) const; 
     constexpr float& operator[](size_t index);
 
+    [[nodiscard]] constexpr const float* data() const noexcept;
+
 private:
     float data_[Size];
 };
@@ -43,5 +45,11 @@ float dot(const Vec<Size>& lhs, const Vec<Size>& rhs);
 using Vec2 = Vec<2>;
 using Vec3 = Vec<3>;
 using Vec4 = Vec<4>;
+
+using Axis = Vec3;
+
+//static const Axis xAxis = Vec3(1.0f, 0.0f, 0.0f);
+//static const Axis yAxis = Vec3(0.0f, 1.0f, 0.0f);
+//static const Axis zAxis = Vec3(0.0f, 0.0f, 1.0f);
 
 #endif //VEC_H

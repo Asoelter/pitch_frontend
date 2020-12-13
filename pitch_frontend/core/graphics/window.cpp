@@ -6,6 +6,7 @@ Window::Window(int width, int height, const std::string& title)
     : window_(nullptr)
     , width_(width)
     , height_(height)
+    , backgroundColor_(Color::black())
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -47,6 +48,8 @@ Window::~Window()
 void Window::beginFrame() noexcept
 {
     processInput(window_);
+    glClearColor(backgroundColor_.r(), backgroundColor_.g(), backgroundColor_.b(), backgroundColor_.a());
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Window::endFrame() noexcept
@@ -67,6 +70,11 @@ void Window::close() noexcept
 {
     assert(window_);
     glfwSetWindowShouldClose(window_, true);
+}
+
+void Window::setBackgroundColor(const Color& color)
+{
+    backgroundColor_ = color;
 }
 
 void Window::onResize(GLFWwindow* window, int width, int height)

@@ -44,7 +44,13 @@ void ShaderProgram::setUniform(const std::string& name, float value)
 void ShaderProgram::setUniform(const std::string& name, const Vec3& value)
 {
     const auto location = glGetUniformLocation(id_, name.c_str());
-    glUniform3f(location, value.x(), value.y(), value.z());
+    glUniform3fv(location, 1, value.data());
+}
+
+void ShaderProgram::setUniform(const std::string& name, const Mat4& value)
+{
+    const auto location = glGetUniformLocation(id_, name.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, value.data());
 }
 
 void ShaderProgram::init(VertexShader&& vertexShader, FragmentShader&& fragmentShader) noexcept

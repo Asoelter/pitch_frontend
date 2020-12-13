@@ -14,8 +14,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+
 #include "core/container/typelist.h"
 
+#include "core/graphics/renderer.h"
 #include "core/graphics/shader.h"
 #include "core/graphics/shader_program.h"
 #include "core/graphics/texture.h"
@@ -35,6 +37,7 @@ INT WinMain(HINSTANCE hInstance,
 {
 
     Window window(800, 600, "Pitch");
+    window.setBackgroundColor(Color(0.2f, 0.3f, 0.3f, 1.0f));
 
     const std::vector<float> vertices = {
         -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, //bottom left
@@ -58,20 +61,23 @@ INT WinMain(HINSTANCE hInstance,
     const auto filePath = "../../../../pitch_frontend/res/textures/king_of_hearts.png";
     const auto textureInfo = loadTextureInfo(filePath);
     auto texture = Texture(textureInfo);
+    float angle = 0.0f;
+    Renderer renderer;
 
     while(window.isOpen())
     {
         window.beginFrame();
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
 
         program.bind();
-        program.setUniform("offset", 0.5f);
+        const auto rotation = Mat4::rotate(Vec4(0.0f, 0.0f, 1.0f, 1.0f), Degree(angle));
+        program.setUniform("rotation", rotation);
         texture.bind();
         vao.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        renderer.render(vbo);
 
         window.endFrame();
+
+        angle += 0.03f;
     }
 
     return 0;

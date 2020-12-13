@@ -5,11 +5,10 @@ layout (location = 1) in vec2 vertTextureCoords;
 
 out vec2 fragTextureCoords;
 
-uniform float offset;
+uniform mat4 rotation;
 
 void main()
 {
-    vec4 position = vec4(pos.x + offset, pos.yz, 1.0);
-    gl_Position = position;
+    gl_Position = rotation* vec4(pos, 1.0);
     fragTextureCoords = vertTextureCoords;
 }

@@ -20,6 +20,7 @@ template<typename ... T>
 constexpr Vec<Size>::Vec(T ... values)
 {
     static_assert(IsAll<float, Typelist<T...>>);
+    static_assert(sizeof...(T) == Size, "Invalid number of parameters");
 
     int index = 0;
 
@@ -151,4 +152,10 @@ float dot(const Vec<Size>& lhs, const Vec<Size>& rhs)
     }
 
     return result;
+}
+
+template<size_t Size>
+[[nodiscard]] constexpr const float* Vec<Size>::data() const noexcept
+{
+    return &data_[0];
 }

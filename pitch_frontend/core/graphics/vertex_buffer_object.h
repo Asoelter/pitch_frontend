@@ -15,13 +15,16 @@
 class VertexBufferObject
 {
 public:
-    VertexBufferObject(const std::vector<float>& values, const std::vector<unsigned>& valuesPerIndex);
+    VertexBufferObject(const std::vector<float>& values, const std::vector<unsigned>& valuesPerVertex);
 
     void bind() noexcept;
     void unbind() noexcept;
 
+    size_t vertexCount() const noexcept;
+
 private:
     unsigned id_;
+    size_t vertexCount_;
 };
 
 #endif //VERTEX_BUFFER_OBJECT

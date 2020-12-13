@@ -6,6 +6,8 @@
 
 #include <string>
 
+#include "color.h"
+
 class Window
 {
 public:
@@ -23,14 +25,17 @@ public:
     bool isOpen() const noexcept;
     void close() noexcept;
 
+    void setBackgroundColor(const Color& color);
+
 private:
     static void onResize(GLFWwindow* window, int width, int height);
     static void processInput(GLFWwindow* window);
 
 private:
     GLFWwindow* window_;
-    int width_;
-    int height_;
+    int         width_;
+    int         height_;
+    Color       backgroundColor_;
 };
 
 #endif //WINDOW_H

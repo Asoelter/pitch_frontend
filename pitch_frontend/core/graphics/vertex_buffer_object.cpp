@@ -4,21 +4,22 @@
 
 #include <numeric>
 
-VertexBufferObject::VertexBufferObject(const std::vector<float>& values, const std::vector<unsigned>& valuesPerAttribute)
+VertexBufferObject::VertexBufferObject(const std::vector<float>& values, const std::vector<unsigned>& valuesPerVertex)
     : id_(0)
 {
     glGenBuffers(1, &id_);
     glBindBuffer(GL_ARRAY_BUFFER, id_);
     glBufferData(GL_ARRAY_BUFFER, values.size() * sizeof(float), values.data(), GL_STATIC_DRAW);
 
-    const auto valuesPerIndex = std::accumulate(valuesPerAttribute.begin(), valuesPerAttribute.end(), 0);
+    const auto valuesPerIndex = std::accumulate(valuesPerVertex.begin(), valuesPerVertex.end(), 0u);
+    vertexCount_ = values.size() / valuesPerIndex;
 
-    for(size_t i = 0; i < valuesPerAttribute.size(); ++i)
+    for(size_t i = 0; i < valuesPerVertex.size(); ++i)
     {
-        const auto valuesBeforeThisAttribute = std::accumulate(&valuesPerAttribute[0], &valuesPerAttribute[i], 0);
+        const auto valuesBeforeThisAttribute = std::accumulate(&valuesPerVertex[0], &valuesPerVertex[i], 0u);
 
         glVertexAttribPointer(static_cast<GLuint>(i), 
-                              valuesPerAttribute[i], 
+                              valuesPerVertex[i], 
                               GL_FLOAT, 
                               GL_FALSE, 
                               valuesPerIndex * sizeof(float), 
@@ -36,4 +37,9 @@ void VertexBufferObject::bind() noexcept
 void VertexBufferObject::unbind() noexcept
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+size_t VertexBufferObject::vertexCount() const noexcept
+{
+    return vertexCount_;
 }

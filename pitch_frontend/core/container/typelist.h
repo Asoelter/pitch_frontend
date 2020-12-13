@@ -68,4 +68,20 @@ struct IsHomogenousT<Typelist<Args...>>
 template<typename T>
 constexpr bool IsHomogenous = IsHomogenousT<T>::value;
 
+//-------------------NthElement----------------------
+template<typename List, unsigned N>
+class NthElementT : public NthElementT<Tail<List>, N - 1>
+{
+    
+};
+
+template<typename List>
+class NthElementT<List, 0>
+{
+    using type = Head<List>;
+};
+
+template<typename List, unsigned N>
+using NthElement = NthElementT<List, N>;
+
 #endif //TYPELIST_H

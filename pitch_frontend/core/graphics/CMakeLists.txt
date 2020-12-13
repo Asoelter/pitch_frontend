@@ -6,7 +6,7 @@ project("graphics")
 add_library(${PROJECT_NAME} "vertex_array_object.h"		"vertex_array_object.cpp" 
 							"vertex_buffer_object.h"	"vertex_buffer_object.cpp" 
 							"window.h"					"window.cpp" "shader.cpp" 
-							"shader_program.h"			"shader_program.cpp" "texture.h" "texture.cpp")
+							"shader_program.h"			"shader_program.cpp" "texture.h" "texture.cpp" "color.h" "color.cpp"  "renderer.h" "renderer.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../../third_party)
 

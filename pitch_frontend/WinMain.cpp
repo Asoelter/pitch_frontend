@@ -41,13 +41,13 @@ INT WinMain(HINSTANCE hInstance,
     const auto projection = Mat4::orthographic(0.0f, 2.0f, 0.0f, 2.0f, 0.1f, 2.0f);
 
     const std::vector<float> vertices = {
-        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, //bottom left
-         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, //bottom right
-        -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, //top left
+        -1.0f, -1.0f, 0.0f,  0.0f, 0.0f, //bottom left
+         1.0f, -1.0f, 0.0f,  1.0f, 0.0f, //bottom right
+        -1.0f,  1.0f, 0.0f,  0.0f, 1.0f, //top left
 
-         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, //bottom right
-         0.5f,  0.5f, 0.0f,  1.0f, 1.0f, //top right
-        -0.5f,  0.5f, 0.0f,  0.0f, 1.0f  //top left
+         1.0f, -1.0f, 0.0f,  1.0f, 0.0f, //bottom right
+         1.0f,  1.0f, 0.0f,  1.0f, 1.0f, //top right
+        -1.0f,  1.0f, 0.0f,  0.0f, 1.0f  //top left
     };
 
     const std::vector<unsigned> valuesPerAttribute = { 3, 2 };
@@ -71,11 +71,10 @@ INT WinMain(HINSTANCE hInstance,
         window.beginFrame();
 
         program.bind();
-        //const auto rotation = Mat4::rotate(Vec4(0.0f, 0.0f, 1.0f, 1.0f), Degree(angle));
-        const auto rotation = Mat4::rotate(Vec4(0.0f, 0.0f, 1.0f, 1.0f), Degree(0.0f));
-        program.setUniform("rotation", rotation);
-        program.setUniform("projection", projection);
+        const auto rotation = Mat4::rotate(Vec4(0.0f, 0.0f, 1.0f, 1.0f), Degree(angle));
+        program.setUniform("model", rotation);
         program.setUniform("view", Mat4::lookAt({ 0.0f, 0.0f, 0.3f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }));
+        program.setUniform("projection", projection);
         texture.bind();
         vao.bind();
         renderer.render(vbo);

@@ -50,6 +50,14 @@ void ShaderProgram::setUniform(const std::string& name, const Vec3& value)
 void ShaderProgram::setUniform(const std::string& name, const Mat4& value)
 {
     const auto location = glGetUniformLocation(id_, name.c_str());
+
+#ifdef DEBUG
+    if(location == -1)
+    {
+        throw std::runtime_error("Uniform variable " + name + " is not found.");
+    }
+#endif
+
     glUniformMatrix4fv(location, 1, GL_FALSE, value.data());
 }
 

@@ -14,12 +14,12 @@ public:
     ~Mat() = default;
 
     constexpr Mat& operator=(const Mat& rhs);
-    constexpr Mat& operator=(Mat&& rhs);
+    constexpr Mat& operator=(Mat&& rhs) noexcept;
 
-    [[nodiscard]] constexpr Mat operator+(const Mat& rhs);
+    [[nodiscard]] constexpr Mat operator+(const Mat& rhs) const;
     constexpr Mat& operator+=(const Mat& rhs);
     
-    [[nodiscard]] constexpr Mat operator*(const Mat& rhs);
+    [[nodiscard]] constexpr Mat operator*(const Mat& rhs) const;
     constexpr Mat& operator*=(const Mat& rhs);
 
     [[nodiscard]] constexpr const float* data() const noexcept;

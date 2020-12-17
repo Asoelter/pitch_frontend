@@ -38,7 +38,7 @@ INT WinMain(HINSTANCE hInstance,
 
     Window window(800, 600, "Pitch");
     window.setBackgroundColor(Color(0.2f, 0.3f, 0.3f, 1.0f));
-    const auto projection = Mat4::orthographic(0.0f, 2.0f, 0.0f, 2.0f, 0.1f, 2.0f);
+    const auto projection = Mat4::orthographic(0.0f, 2.0f, 0.0f, 2.0f, -2.0f, 2.0f);
 
     const std::vector<float> vertices = {
         -1.0f, -1.0f, 0.0f,  0.0f, 0.0f, //bottom left
@@ -71,8 +71,10 @@ INT WinMain(HINSTANCE hInstance,
         window.beginFrame();
 
         program.bind();
+        const auto translation = Mat4::translate({ 1.0f, 1.0f, 0.0f, 1.0f });
         const auto rotation = Mat4::rotate(Vec4(0.0f, 0.0f, 1.0f, 1.0f), Degree(angle));
-        program.setUniform("model", rotation);
+        const auto model = rotation * translation;
+        program.setUniform("model", model);
         program.setUniform("view", Mat4::lookAt({ 0.0f, 0.0f, 0.3f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }));
         program.setUniform("projection", projection);
         texture.bind();

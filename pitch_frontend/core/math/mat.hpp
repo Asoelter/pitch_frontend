@@ -41,10 +41,12 @@ constexpr Mat<N, M>& Mat<N, M>::operator=(const Mat& rhs)
             data_[j][i] = rhs.data_[j][i];
         }
     }
+
+    return *this;
 }
 
 template<size_t N, size_t M>
-constexpr Mat<N, M>& Mat<N, M>::operator=(Mat&& rhs)
+constexpr Mat<N, M>& Mat<N, M>::operator=(Mat&& rhs) noexcept
 {
     for(size_t j = 0; j < M; ++j)
     {
@@ -58,7 +60,7 @@ constexpr Mat<N, M>& Mat<N, M>::operator=(Mat&& rhs)
 }
 
 template<size_t N, size_t M>
-constexpr Mat<N, M> Mat<N, M>::operator+(const Mat& rhs)
+constexpr Mat<N, M> Mat<N, M>::operator+(const Mat& rhs) const
 {
     Mat<N, M> result;
 
@@ -81,7 +83,7 @@ constexpr Mat<N, M>& Mat<N, M>::operator+=(const Mat& rhs)
 }
 
 template<size_t N, size_t M>
-constexpr Mat<N, M> Mat<N, M>::operator*(const Mat& rhs)
+constexpr Mat<N, M> Mat<N, M>::operator*(const Mat& rhs) const
 {
     Mat<N, M> result;
 
@@ -135,9 +137,9 @@ constexpr Mat<N, M> Mat<N, M>::translate(const Vec<N>& displacement)
 {
     auto result = identity();
 
-    for(int i = 0; i < N; ++i)
+    for(int i = 0; i < M; ++i)
     {
-        result.data_[M - 1][i] = displacement[i];
+        result.data_[N - 1][i] = displacement[i];
     }
 
     return result;

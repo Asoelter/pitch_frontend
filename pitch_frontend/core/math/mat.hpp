@@ -196,3 +196,33 @@ template<size_t N, size_t M>
 {
     return rotate(axis, Radian::from(angle));
 }
+
+template<size_t N, size_t M>
+[[nodiscard]] constexpr Mat<4, 4> Mat<N, M>::lookAt(const Vec<3>& eye, const Vec<3>& center, const Vec<3>& up)
+{
+    //need right, up, down
+    const auto forward = normalize(eye - center);
+    const auto right = normalize(cross(normalize(up), forward));
+
+    Mat4 lhs = Mat4::identity();
+
+    lhs.data_[0][0] = right.x();
+    lhs.data_[0][1] = right.y();
+    lhs.data_[0][2] = right.z();
+
+    lhs.data_[1][0] = up.x();
+    lhs.data_[1][1] = up.y();
+    lhs.data_[1][2] = up.z();
+
+    lhs.data_[2][0] = forward.x();
+    lhs.data_[2][1] = forward.y();
+    lhs.data_[2][2] = forward.z();
+
+    Mat4 rhs = Mat4::identity();
+
+    rhs.data_[3][0] = -1.0f * eye.x();
+    rhs.data_[3][1] = -1.0f * eye.y();
+    rhs.data_[3][2] = -1.0f * eye.z();
+
+    return rhs * lhs;
+}

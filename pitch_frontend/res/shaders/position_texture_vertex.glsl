@@ -6,9 +6,13 @@ layout (location = 1) in vec2 vertTextureCoords;
 out vec2 fragTextureCoords;
 
 uniform mat4 rotation;
+uniform mat4 view = mat4(1.0, 0.0, 0.0, 0.0,
+                         0.0, 1.0, 0.0, 0.0,
+                         0.0, 0.0, 1.0, 0.0,
+                         0.0, 0.0, 0.0, 1.0);
 
 void main()
 {
-    gl_Position = rotation* vec4(pos, 1.0);
+    gl_Position = view * rotation* vec4(pos, 1.0);
     fragTextureCoords = vertTextureCoords;
 }

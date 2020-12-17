@@ -14,5 +14,3 @@ endfunction()
 ADDDIRECTORY(graphics)
 ADDDIRECTORY(util)
 ADDDIRECTORY(math)
-
-

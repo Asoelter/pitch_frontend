@@ -28,15 +28,16 @@ public:
     [[nodiscard]] static constexpr Mat translate(const Vec<N>& displacement);
     [[nodiscard]] static constexpr Mat rotate(const Vec<N>& axis, Radian angle);
     [[nodiscard]] static constexpr Mat rotate(const Vec<N>& axis, Degree angle);
+    [[nodiscard]] static constexpr Mat<4, 4> lookAt(const Vec<3>& eye, const Vec<3>& center, const Vec<3>& up);
 
 private:
     float data_[N][M];
 };
 
-#include "mat.hpp"
-
 using Mat2 = Mat<2, 2>;
 using Mat3 = Mat<3, 3>;
 using Mat4 = Mat<4, 4>;
+
+#include "mat.hpp"
 
 #endif //MAT_H

@@ -1,6 +1,7 @@
 #include <type_traits>
 
 #include <cassert>
+#include <cmath>
 #include <numeric>
 
 #include "../container/typelist.h"
@@ -19,7 +20,7 @@ template<size_t Size >
 template<typename ... T>
 constexpr Vec<Size>::Vec(T ... values)
 {
-    static_assert(IsAll<float, Typelist<T...>>);
+    static_assert(IsAll<float, Typelist<T...>>, "Vec requires all arguments to be float");
     static_assert(sizeof...(T) == Size, "Invalid number of parameters");
 
     int index = 0;
@@ -74,7 +75,7 @@ constexpr Vec<Size>& Vec<Size>::operator-=(const Vec<Size>& rhs)
 }
 
 template<size_t Size >
-[[nodiscard]] constexpr Vec<Size> Vec<Size>::operator+(const Vec<Size>& rhs)
+[[nodiscard]] constexpr Vec<Size> Vec<Size>::operator+(const Vec<Size>& rhs) const
 {
     Vec<Size> result;
 
@@ -87,7 +88,7 @@ template<size_t Size >
 }
 
 template<size_t Size >
-[[nodiscard]] constexpr Vec<Size> Vec<Size>::operator-(const Vec<Size>& rhs)
+[[nodiscard]] constexpr Vec<Size> Vec<Size>::operator-(const Vec<Size>& rhs) const
 {
     Vec<Size> result;
 
@@ -142,6 +143,25 @@ constexpr float& Vec<Size>::operator[](size_t index)
 }
 
 template<size_t Size>
+[[nodiscard]] constexpr const float* Vec<Size>::data() const noexcept
+{
+    return &data_[0];
+}
+
+template<size_t Size>
+
+[[nodiscard]] constexpr const float* Vec<Size>::begin() const noexcept
+{
+    return &data_[0];
+}
+
+template<size_t Size>
+[[nodiscard]] constexpr const float* Vec<Size>::end() const noexcept
+{
+    return &data_[Size];
+}
+
+template<size_t Size>
 float dot(const Vec<Size>& lhs, const Vec<Size>& rhs)
 {
     float result = 0.0f;
@@ -155,7 +175,18 @@ float dot(const Vec<Size>& lhs, const Vec<Size>& rhs)
 }
 
 template<size_t Size>
-[[nodiscard]] constexpr const float* Vec<Size>::data() const noexcept
+Vec<Size> normalize(const Vec<Size>& vec)
 {
-    return &data_[0];
+    Vec<Size> result;
+
+    const auto sumOfSquares = [](const float l, const float r) {return l + (r * r); };
+    const auto sum = std::accumulate(vec.begin(), vec.end(), 0.0f, sumOfSquares);
+    const auto denominator = std::sqrt(sum);
+
+    for(size_t i = 0; i < Size; ++i)
+    {
+        result[i] = vec[i] / denominator;
+    }
+
+    return result;
 }

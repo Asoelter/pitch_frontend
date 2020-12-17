@@ -39,6 +39,7 @@ INT WinMain(HINSTANCE hInstance,
     Window window(800, 600, "Pitch");
     window.setBackgroundColor(Color(0.2f, 0.3f, 0.3f, 1.0f));
 
+
     const std::vector<float> vertices = {
         -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, //bottom left
          0.5f, -0.5f, 0.0f,  1.0f, 0.0f, //bottom right
@@ -62,6 +63,7 @@ INT WinMain(HINSTANCE hInstance,
     const auto textureInfo = loadTextureInfo(filePath);
     auto texture = Texture(textureInfo);
     float angle = 0.0f;
+    float cameraX = 0.0f;
     Renderer renderer;
 
     while(window.isOpen())
@@ -78,6 +80,12 @@ INT WinMain(HINSTANCE hInstance,
         window.endFrame();
 
         angle += 0.03f;
+        cameraX += 0.0001f;
+
+        if(cameraX > 1.0f)
+        {
+            cameraX = -1.0f;
+        }
     }
 
     return 0;

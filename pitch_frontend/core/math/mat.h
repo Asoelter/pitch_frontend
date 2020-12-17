@@ -29,6 +29,7 @@ public:
     [[nodiscard]] static constexpr Mat rotate(const Vec<N>& axis, Radian angle);
     [[nodiscard]] static constexpr Mat rotate(const Vec<N>& axis, Degree angle);
     [[nodiscard]] static constexpr Mat<4, 4> lookAt(const Vec<3>& eye, const Vec<3>& center, const Vec<3>& up);
+    [[nodiscard]] static constexpr Mat<4, 4> orthographic(float xmin, float xmax, float ymin, float ymax, float zmin, float zmax);
 
 private:
     float data_[N][M];

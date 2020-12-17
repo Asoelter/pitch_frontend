@@ -4,7 +4,7 @@ template<size_t N, size_t M>
 constexpr Mat<N, M>::Mat()
     : data_()
 {
-    
+    ZeroMemory(data_, N + M);
 }
 
 template<size_t N, size_t M>
@@ -53,6 +53,8 @@ constexpr Mat<N, M>& Mat<N, M>::operator=(Mat&& rhs)
             data_[j][i] = rhs.data_[j][i];
         }
     }
+
+    return *this;
 }
 
 template<size_t N, size_t M>
@@ -225,4 +227,41 @@ template<size_t N, size_t M>
     rhs.data_[3][2] = -1.0f * eye.z();
 
     return rhs * lhs;
+}
+
+template<size_t N, size_t M>
+[[nodiscard]] constexpr Mat<4, 4> Mat<N, M>::orthographic(float xmin, float xmax, float ymin, float ymax, float zmin, float zmax)
+{
+    /*                                                                      
+     * Formula:                                                             
+     *                                                                      
+     * __                                                                 __
+     * | 2 / (r - l)         0                0         -(r + l) / (r - l) |
+     * |     0          2 / (t - b)           0         -(t + b) / (t - b) |
+     * |     0               0          -2 / (f - n)    -(f + n) / (f - n) |
+     * |_    0               0                0                  1        _|
+     *
+     * Where l = left   (xmin)
+     *       r = right  (xmax)
+     *       b = bottom (ymin)
+     *       t = top    (ymax)
+     *       n = near   (zmin)
+     *       f = far    (zmax)
+     */
+
+    const auto diagonalValue = [](float min, float max) {return 2.0f / (max - min); };
+    const auto columnValue = [](float min, float max) {return -1.0f * ((max + min) / (max - min)); };
+
+    Mat4 result;
+
+    result.data_[0][0] = diagonalValue(xmin, xmax);
+    result.data_[1][1] = diagonalValue(ymin, ymax);
+    result.data_[2][2] = -1.0f * diagonalValue(zmin, zmax);
+    result.data_[3][3] = 1.0f;
+
+    result.data_[3][0] = columnValue(xmin, xmax);
+    result.data_[3][1] = columnValue(ymin, ymax);
+    result.data_[3][2] = columnValue(zmin, zmax);
+
+    return result;
 }

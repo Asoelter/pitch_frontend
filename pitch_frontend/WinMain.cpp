@@ -6,17 +6,11 @@
 #   define NOMINMAX
 #endif
 
-#include <string>
 #include <Windows.h>
 
 #include <covid/socket.h>
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-
-#include "core/container/typelist.h"
-
+#include "core/graphics/camera.h"
 #include "core/graphics/renderer.h"
 #include "core/graphics/shader.h"
 #include "core/graphics/shader_program.h"
@@ -38,7 +32,6 @@ INT WinMain(HINSTANCE hInstance,
 
     Window window(800, 600, "Pitch");
     window.setBackgroundColor(Color(0.2f, 0.3f, 0.3f, 1.0f));
-    const auto projection = Mat4::orthographic(0.0f, 2.0f, 0.0f, 2.0f, -2.0f, 2.0f);
 
     const std::vector<float> vertices = {
         -1.0f, -1.0f, 0.0f,  0.0f, 0.0f, //bottom left
@@ -64,7 +57,9 @@ INT WinMain(HINSTANCE hInstance,
     auto texture = Texture(textureInfo);
     float angle = 0.0f;
     float cameraX = 0.0f;
+    float zoom = 1.0f;
     Renderer renderer;
+    Camera camera(Camera::Orientation::normalOrientation(0.3f), {0.0f, 2.0f, 0.0f, 2.0f, -2.0f, 2.0f});
 
     while(window.isOpen())
     {
@@ -75,8 +70,8 @@ INT WinMain(HINSTANCE hInstance,
         const auto rotation = Mat4::rotate(Vec4(0.0f, 0.0f, 1.0f, 1.0f), Degree(angle));
         const auto model = rotation * translation;
         program.setUniform("model", model);
-        program.setUniform("view", Mat4::lookAt({ 0.0f, 0.0f, 0.3f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }));
-        program.setUniform("projection", projection);
+        program.setUniform("view", camera.view());
+        program.setUniform("projection", camera.projection());
         texture.bind();
         vao.bind();
         renderer.render(vbo);
@@ -85,10 +80,16 @@ INT WinMain(HINSTANCE hInstance,
 
         angle += 0.03f;
         cameraX += 0.0001f;
+        zoom -= 0.0003f;
+
+        if(zoom < 0.1f)
+        {
+            zoom = 1.0f;
+        }
 
         if(cameraX > 1.0f)
         {
-            cameraX = -1.0f;
+            cameraX = 0.0f;
         }
     }
 

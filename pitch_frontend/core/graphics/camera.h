@@ -1,13 +1,35 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "math/mat.h"
-#include "vec.h"
+#include <math/mat.h>
+#include <math/vec.h>
 
 class Camera
 {
 public:
-    Camera(const Vec3& eye, const Vec3& center, const Vec3& up);
+
+    struct Orientation
+    {
+        Vec3 eye;
+        Vec3 center;
+        Vec3 up;
+
+        static Orientation normalOrientation(float setback);
+    };
+
+    struct WorldBounds
+    {
+        float xmin;
+        float xmax;
+        float ymin;
+        float ymax;
+        float zmin;
+        float zmax;
+
+        static WorldBounds equalBounds(float xBound, float yBound, float zBound); //< needs better name
+    };
+
+    Camera(const Orientation& orientation, const WorldBounds& bounds);
     Camera(const Camera&) = default;
     Camera(Camera&&) = default;
     ~Camera() = default;
@@ -16,14 +38,18 @@ public:
     Camera& operator=(Camera&&) = default;
 
     void move(const Vec3& direction);
-    void zoom(float scale);
+    void moveTo(const Vec3& direction);
+    void pan(const Vec3& direction);
+    void panTo(const Vec3& direction);
+    void zoom(float scale); //< This one needs more work when needed
 
-    Mat4 matrix() const noexcept;
+    Mat4 view() const noexcept;
+    Mat4 projection() const noexcept;
 
 private:
-    Vec3 eye_;
-    Vec3 center_;
-    Vec3 up_;
+    Orientation orientation_;
+    WorldBounds bounds_;
+    float       zoomScale_;
 };
 
 #endif //CAMERA_H

@@ -6,7 +6,12 @@ project("graphics")
 add_library(${PROJECT_NAME} "vertex_array_object.h"		"vertex_array_object.cpp" 
 							"vertex_buffer_object.h"	"vertex_buffer_object.cpp" 
 							"window.h"					"window.cpp" "shader.cpp" 
-							"shader_program.h"			"shader_program.cpp" "texture.h" "texture.cpp" "color.h" "color.cpp"  "renderer.h" "renderer.cpp" "camera.h")
+							"shader_program.h"			"shader_program.cpp" 
+							"texture.h"					"texture.cpp" 
+							"color.h"					"color.cpp"  
+							"renderer.h"				"renderer.cpp" 
+							"camera.h"					"camera.cpp" 
+							"mesh.h")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../../third_party)
 
@@ -18,4 +23,5 @@ include_directories(../../third_party/glad)
 include_directories(../../third_party/glfw)
 include_directories(../../third_party/glfw/include)
 
+include_directories(../)
 include_directories(../util)

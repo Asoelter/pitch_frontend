@@ -24,6 +24,9 @@ public:
 
     [[nodiscard]] constexpr const float* data() const noexcept;
 
+    [[nodiscard]] constexpr const Vec<M>& operator[](size_t index) const;
+    [[nodiscard]] constexpr Vec<M>& operator[](size_t index) ;
+
     [[nodiscard]] static constexpr Mat identity();
     [[nodiscard]] static constexpr Mat translate(const Vec<N>& displacement);
     [[nodiscard]] static constexpr Mat rotate(const Vec<N>& axis, Radian angle);
@@ -32,7 +35,11 @@ public:
     [[nodiscard]] static constexpr Mat<4, 4> orthographic(float xmin, float xmax, float ymin, float ymax, float zmin, float zmax);
 
 private:
-    float data_[N][M];
+    union
+    {
+        float data_[N][M];
+        Vec<N> vecs_[M];
+    };
 };
 
 using Mat2 = Mat<2, 2>;

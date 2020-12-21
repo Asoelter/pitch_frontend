@@ -4,7 +4,7 @@ template<size_t N, size_t M>
 constexpr Mat<N, M>::Mat()
     : data_()
 {
-    ZeroMemory(data_, N + M);
+    memset(data_, 0, N + M);
 }
 
 template<size_t N, size_t M>
@@ -117,6 +117,18 @@ constexpr const float* Mat<N, M>::data() const noexcept
 }
 
 template<size_t N, size_t M>
+[[nodiscard]] constexpr const Vec<M>& Mat<N, M>::operator[](size_t index) const
+{
+    return vecs_[index];
+}
+
+template<size_t N, size_t M>
+[[nodiscard]] constexpr Vec<M>& Mat<N, M>::operator[](size_t index)
+{
+    return vecs_[index];
+}
+
+template<size_t N, size_t M>
 constexpr Mat<N, M> Mat<N, M>::identity()
 {
     Mat<N, M> result;
@@ -125,7 +137,7 @@ constexpr Mat<N, M> Mat<N, M>::identity()
     {
         for (size_t i = 0; i < N; ++i)
         {
-            result.data_[j][i] = static_cast<float>(i == j);
+            result[j][i] = static_cast<float>(i == j);
         }
     }
 
@@ -139,7 +151,7 @@ constexpr Mat<N, M> Mat<N, M>::translate(const Vec<N>& displacement)
 
     for(int i = 0; i < M; ++i)
     {
-        result.data_[N - 1][i] = displacement[i];
+        result[N - 1][i] = displacement[i];
     }
 
     return result;
@@ -204,29 +216,28 @@ template<size_t N, size_t M>
 template<size_t N, size_t M>
 [[nodiscard]] constexpr Mat<4, 4> Mat<N, M>::lookAt(const Vec<3>& eye, const Vec<3>& center, const Vec<3>& up)
 {
-    //need right, up, down
     const auto forward = normalize(eye - center);
     const auto right = normalize(cross(normalize(up), forward));
 
     Mat4 lhs = Mat4::identity();
 
-    lhs.data_[0][0] = right.x();
-    lhs.data_[0][1] = right.y();
-    lhs.data_[0][2] = right.z();
+    lhs[0][0] = right.x();
+    lhs[0][1] = right.y();
+    lhs[0][2] = right.z();
 
-    lhs.data_[1][0] = up.x();
-    lhs.data_[1][1] = up.y();
-    lhs.data_[1][2] = up.z();
+    lhs[1][0] = up.x();
+    lhs[1][1] = up.y();
+    lhs[1][2] = up.z();
 
-    lhs.data_[2][0] = forward.x();
-    lhs.data_[2][1] = forward.y();
-    lhs.data_[2][2] = forward.z();
+    lhs[2][0] = forward.x();
+    lhs[2][1] = forward.y();
+    lhs[2][2] = forward.z();
 
     Mat4 rhs = Mat4::identity();
 
-    rhs.data_[3][0] = -1.0f * eye.x();
-    rhs.data_[3][1] = -1.0f * eye.y();
-    rhs.data_[3][2] = -1.0f * eye.z();
+    rhs[3][0] = -1.0f * eye.x();
+    rhs[3][1] = -1.0f * eye.y();
+    rhs[3][2] = -1.0f * eye.z();
 
     return rhs * lhs;
 }
@@ -256,14 +267,14 @@ template<size_t N, size_t M>
 
     Mat4 result;
 
-    result.data_[0][0] = diagonalValue(xmin, xmax);
-    result.data_[1][1] = diagonalValue(ymin, ymax);
-    result.data_[2][2] = -1.0f * diagonalValue(zmin, zmax);
-    result.data_[3][3] = 1.0f;
+    result[0][0] = diagonalValue(xmin, xmax);
+    result[1][1] = diagonalValue(ymin, ymax);
+    result[2][2] = -1.0f * diagonalValue(zmin, zmax);
+    result[3][3] = 1.0f;
 
-    result.data_[3][0] = columnValue(xmin, xmax);
-    result.data_[3][1] = columnValue(ymin, ymax);
-    result.data_[3][2] = columnValue(zmin, zmax);
+    result[3][0] = columnValue(xmin, xmax);
+    result[3][1] = columnValue(ymin, ymax);
+    result[3][2] = columnValue(zmin, zmax);
 
     return result;
 }

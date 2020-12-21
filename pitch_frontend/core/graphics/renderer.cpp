@@ -5,5 +5,5 @@
 
 void Renderer::render(const VertexBufferObject& vbo)
 {
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, vbo.vertexCount());
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, static_cast<GLsizei>(vbo.vertexCount()));
 }

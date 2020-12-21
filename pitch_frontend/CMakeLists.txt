@@ -10,6 +10,9 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_compile_definitions(DEBUG=1)
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
+add_compile_definitions(PITCH_SHADER_DIRECTORY="${PROJECT_SOURCE_DIR}/pitch_frontend/res/shaders")
+add_compile_definitions(PITCH_TEXTURE_DIRECTORY="${PROJECT_SOURCE_DIR}/pitch_frontend/res/textures")
+
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
 add_subdirectory(third_party/covid)

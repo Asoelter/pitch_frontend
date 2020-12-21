@@ -24,6 +24,7 @@
 #include "core/math/mat.h"
 
 #include "core/util/file_io.h"
+#include "core/util/resource_loader.h"
 
 INT WinMain(HINSTANCE hInstance,
             HINSTANCE hPrevInstance,
@@ -49,12 +50,11 @@ INT WinMain(HINSTANCE hInstance,
     VertexArrayObject vao;
     VertexBufferObject vbo(vertices, valuesPerAttribute);
 
-    VertexShader vertexShader(readFile("../../../../pitch_frontend/res/shaders/position_texture_vertex.glsl"));
-    FragmentShader fragmentShader(readFile("../../../../pitch_frontend/res/shaders/position_texture_fragment.glsl"));
+    VertexShader vertexShader(ResourceLoader::loadShader("position_texture_vertex.glsl"));
+    FragmentShader fragmentShader(ResourceLoader::loadShader("position_texture_fragment.glsl"));
     ShaderProgram program(std::move(vertexShader), std::move(fragmentShader));
 
-    const auto filePath = "../../../../pitch_frontend/res/textures/king_of_hearts.png";
-    const auto textureInfo = loadTextureInfo(filePath);
+    const auto textureInfo = ResourceLoader::loadTexture("king_of_hearts.png");
     auto texture = Texture(textureInfo);
     Renderer renderer;
     Camera camera(Camera::Orientation::normalOrientation(0.3f), {0.0f, 10.0f, 0.0f, 10.0f, -10.0f, 10.0f});

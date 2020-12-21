@@ -28,7 +28,6 @@ struct TextureInfo
 };
 
 std::string readFile(const std::string& fileName);
-
 TextureInfo loadTextureInfo(const std::string& fileName);
 
 #endif //FILE_IO_H

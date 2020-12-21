@@ -7,10 +7,7 @@
 #ifndef VERTEX_BUFFER_OBJECT
 #define VERTEX_BUFFER_OBJECT
 
-#include <array>
 #include <vector>
-
-#include <limits>
 
 class VertexBufferObject
 {

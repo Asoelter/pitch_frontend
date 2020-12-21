@@ -11,6 +11,7 @@
 #include <covid/socket.h>
 
 #include "core/graphics/camera.h"
+#include "core/graphics/mesh.h"
 #include "core/graphics/renderer.h"
 #include "core/graphics/shader.h"
 #include "core/graphics/shader_program.h"
@@ -55,21 +56,19 @@ INT WinMain(HINSTANCE hInstance,
     const auto filePath = "../../../../pitch_frontend/res/textures/king_of_hearts.png";
     const auto textureInfo = loadTextureInfo(filePath);
     auto texture = Texture(textureInfo);
-    float angle = 0.0f;
-    float cameraX = 0.0f;
-    float zoom = 1.0f;
     Renderer renderer;
     Camera camera(Camera::Orientation::normalOrientation(0.3f), {0.0f, 2.0f, 0.0f, 2.0f, -2.0f, 2.0f});
+    Mesh mesh(std::move(vbo));
+
+    mesh.translate({ 1.0f, 1.0f, 0.0f });
+    mesh.rotate({ 0.0f, 0.0f, 1.0f }, Degree(30));
 
     while(window.isOpen())
     {
         window.beginFrame();
 
         program.bind();
-        const auto translation = Mat4::translate({ 1.0f, 1.0f, 0.0f, 1.0f });
-        const auto rotation = Mat4::rotate(Vec4(0.0f, 0.0f, 1.0f, 1.0f), Degree(angle));
-        const auto model = rotation * translation;
-        program.setUniform("model", model);
+        program.setUniform("model", mesh.matrix());
         program.setUniform("view", camera.view());
         program.setUniform("projection", camera.projection());
         texture.bind();
@@ -77,20 +76,6 @@ INT WinMain(HINSTANCE hInstance,
         renderer.render(vbo);
 
         window.endFrame();
-
-        angle += 0.03f;
-        cameraX += 0.0001f;
-        zoom -= 0.0003f;
-
-        if(zoom < 0.1f)
-        {
-            zoom = 1.0f;
-        }
-
-        if(cameraX > 1.0f)
-        {
-            cameraX = 0.0f;
-        }
     }
 
     return 0;

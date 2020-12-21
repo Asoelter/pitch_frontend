@@ -11,7 +11,7 @@ add_library(${PROJECT_NAME} "vertex_array_object.h"		"vertex_array_object.cpp"
 							"color.h"					"color.cpp"  
 							"renderer.h"				"renderer.cpp" 
 							"camera.h"					"camera.cpp" 
-							"mesh.h")
+							"mesh.h"					"mesh.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../../third_party)
 

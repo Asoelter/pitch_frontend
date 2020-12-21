@@ -6,7 +6,7 @@
 /*
  * I need to abstract the drawing code
  * out of main but I'm not really sure
- * what I want this to be yet. So,
+ * what I want this to be yet. So, it's
  * very basic
  */
 

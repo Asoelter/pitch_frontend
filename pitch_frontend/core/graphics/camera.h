@@ -41,7 +41,7 @@ public:
     void moveTo(const Vec3& direction);
     void pan(const Vec3& direction);
     void panTo(const Vec3& direction);
-    void zoom(float scale); //< This one needs more work when needed
+    [[deprecated]] void zoom(float scale); //< This one needs more work when needed
 
     Mat4 view() const noexcept;
     Mat4 projection() const noexcept;

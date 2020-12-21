@@ -28,9 +28,9 @@ public:
     [[nodiscard]] constexpr Vec<M>& operator[](size_t index) ;
 
     [[nodiscard]] static constexpr Mat identity();
-    [[nodiscard]] static constexpr Mat translate(const Vec<N>& displacement);
-    [[nodiscard]] static constexpr Mat rotate(const Vec<N>& axis, Radian angle);
-    [[nodiscard]] static constexpr Mat rotate(const Vec<N>& axis, Degree angle);
+    [[nodiscard]] static constexpr Mat<4, 4> translate(const Vec<3>& displacement);
+    [[nodiscard]] static constexpr Mat<4, 4> rotate(const Vec<3>& axis, Radian angle);
+    [[nodiscard]] static constexpr Mat<4, 4> rotate(const Vec<3>& axis, Degree angle);
     [[nodiscard]] static constexpr Mat<4, 4> lookAt(const Vec<3>& eye, const Vec<3>& center, const Vec<3>& up);
     [[nodiscard]] static constexpr Mat<4, 4> orthographic(float xmin, float xmax, float ymin, float ymax, float zmin, float zmax);
 

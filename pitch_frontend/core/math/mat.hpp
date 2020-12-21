@@ -145,20 +145,19 @@ constexpr Mat<N, M> Mat<N, M>::identity()
 }
 
 template<size_t N, size_t M>
-constexpr Mat<N, M> Mat<N, M>::translate(const Vec<N>& displacement)
+constexpr Mat<4, 4> Mat<N, M>::translate(const Vec<3>& displacement)
 {
-    auto result = identity();
+    auto result = Mat4::identity();
 
-    for(int i = 0; i < M; ++i)
-    {
-        result[N - 1][i] = displacement[i];
-    }
+    result[3][0] = displacement.x();
+    result[3][1] = displacement.y();
+    result[3][2] = displacement.z();
 
     return result;
 }
 
 template<size_t N, size_t M>
-[[nodiscard]] constexpr Mat<N, M> Mat<N, M>::rotate(const Vec<N>& axis, Radian angle)
+[[nodiscard]] constexpr Mat<4, 4> Mat<N, M>::rotate(const Vec<3>& axis, Radian angle)
 {
     /*
      * Formula:
@@ -208,7 +207,7 @@ template<size_t N, size_t M>
 }
 
 template<size_t N, size_t M>
-[[nodiscard]] constexpr Mat<N, M> Mat<N, M>::rotate(const Vec<N>& axis, Degree angle)
+[[nodiscard]] constexpr Mat<4, 4> Mat<N, M>::rotate(const Vec<3>& axis, Degree angle)
 {
     return rotate(axis, Radian::from(angle));
 }

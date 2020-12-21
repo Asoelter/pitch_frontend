@@ -1,23 +1,27 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <vector>
-
 #include <math/mat.h>
 #include <math/trig.h>
 #include <math/vec.h>
 
+#include "vertex_buffer_object.h"
+
 class Mesh
 {
 public:
-    Mesh(const std::vector<float>& vertices);
+    Mesh(const VertexBufferObject& vbo);
 
     void translate(const Vec3& direction);
-    void rotate(Radian rads);
-    void rotate(Degree degree);
+    void rotate(const Vec3& axis, Radian rads);
+    void rotate(const Vec3& axis, Degree degree);
+
+    Mat4 matrix() const noexcept;
 
 private:
-    Mat4 modelMatrix_;
+    VertexBufferObject vbo_;
+    Mat4               translation_;
+    Mat4               rotation_;
 };
 
 #endif //MESH_H

@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (pitch_frontend WIN32 "WinMain.cpp" "game/layout.h")
+add_executable (pitch_frontend WIN32 "WinMain.cpp"  "game/card.h" "game/card.cpp")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_compile_definitions(DEBUG=1)

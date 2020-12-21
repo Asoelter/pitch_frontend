@@ -35,13 +35,13 @@ INT WinMain(HINSTANCE hInstance,
     window.setBackgroundColor(Color(0.2f, 0.3f, 0.3f, 1.0f));
 
     const std::vector<float> vertices = {
-        -1.0f, -1.0f, 0.0f,  0.0f, 0.0f, //bottom left
-         1.0f, -1.0f, 0.0f,  1.0f, 0.0f, //bottom right
-        -1.0f,  1.0f, 0.0f,  0.0f, 1.0f, //top left
+        -1.5f, -2.0f, 0.0f,  0.0f, 0.0f, //bottom left
+         1.5f, -2.0f, 0.0f,  1.0f, 0.0f, //bottom right
+        -1.5f,  2.0f, 0.0f,  0.0f, 1.0f, //top left
 
-         1.0f, -1.0f, 0.0f,  1.0f, 0.0f, //bottom right
-         1.0f,  1.0f, 0.0f,  1.0f, 1.0f, //top right
-        -1.0f,  1.0f, 0.0f,  0.0f, 1.0f  //top left
+         1.5f, -2.0f, 0.0f,  1.0f, 0.0f, //bottom right
+         1.5f,  2.0f, 0.0f,  1.0f, 1.0f, //top right
+        -1.5f,  2.0f, 0.0f,  0.0f, 1.0f  //top left
     };
 
     const std::vector<unsigned> valuesPerAttribute = { 3, 2 };
@@ -57,10 +57,10 @@ INT WinMain(HINSTANCE hInstance,
     const auto textureInfo = loadTextureInfo(filePath);
     auto texture = Texture(textureInfo);
     Renderer renderer;
-    Camera camera(Camera::Orientation::normalOrientation(0.3f), {0.0f, 2.0f, 0.0f, 2.0f, -2.0f, 2.0f});
+    Camera camera(Camera::Orientation::normalOrientation(0.3f), {0.0f, 10.0f, 0.0f, 10.0f, -10.0f, 10.0f});
     Mesh mesh(std::move(vbo));
 
-    mesh.translate({ 1.0f, 1.0f, 0.0f });
+    mesh.translate({ 5.0f, 5.0f, 0.0f });
     mesh.rotate({ 0.0f, 0.0f, 1.0f }, Degree(30));
 
     while(window.isOpen())

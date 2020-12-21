@@ -1,5 +1,3 @@
-#include <type_traits>
-
 #include <cassert>
 #include <cmath>
 #include <numeric>
@@ -186,6 +184,19 @@ Vec<Size> normalize(const Vec<Size>& vec)
     for(size_t i = 0; i < Size; ++i)
     {
         result[i] = vec[i] / denominator;
+    }
+
+    return result;
+}
+
+template<size_t Size>
+Vec<Size> operator*(size_t scalar, const Vec<Size>& vector)
+{
+    Vec<Size> result;
+
+    for(int i = 0; i < Size; ++i)
+    {
+        result[i] = scalar * vector[i];
     }
 
     return result;

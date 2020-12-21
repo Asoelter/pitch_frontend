@@ -47,6 +47,9 @@ Vec<Size> normalize(const Vec<Size>& vec);
 
 Vec<3> cross(const Vec<3>& lhs, const Vec<3>& rhs);
 
+template<size_t Size>
+Vec<Size> operator*(size_t scalar, const Vec<Size>& vector);
+
 #include "vec.hpp"
 
 using Vec2 = Vec<2>;

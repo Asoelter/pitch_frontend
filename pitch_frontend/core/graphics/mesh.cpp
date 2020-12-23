@@ -27,3 +27,8 @@ Mat4 Mesh::matrix() const noexcept
 {
     return rotation_ * translation_;
 }
+
+size_t Mesh::vertexCount() const noexcept
+{
+    return vbo_.vertexCount();
+}

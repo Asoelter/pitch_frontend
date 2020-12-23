@@ -1,6 +1,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
+#include "mesh.h"
 #include "vertex_buffer_object.h"
 
 /*
@@ -33,6 +34,7 @@ public:
     Renderer& operator=(Renderer&&) = default;
 
     void render(const VertexBufferObject& vbo);
+    void render(const Mesh& mesh);
 
 private:
 };

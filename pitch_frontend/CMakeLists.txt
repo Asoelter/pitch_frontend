@@ -8,6 +8,8 @@ add_executable (pitch_frontend WIN32 "WinMain.cpp"  "game/card.h" "game/card.cpp
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_compile_definitions(DEBUG=1)
+else()
+	add_compile_definitions(DEBUG=0)
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 add_compile_definitions(PITCH_SHADER_DIRECTORY="${PROJECT_SOURCE_DIR}/pitch_frontend/res/shaders")

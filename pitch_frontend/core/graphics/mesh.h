@@ -17,6 +17,7 @@ public:
     void rotate(const Vec3& axis, Degree degree);
 
     Mat4 matrix() const noexcept;
+    size_t vertexCount() const noexcept;
 
 private:
     VertexBufferObject vbo_;

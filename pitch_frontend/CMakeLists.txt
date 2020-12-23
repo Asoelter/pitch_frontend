@@ -42,6 +42,9 @@ target_include_directories(${PROJECT_NAME} INTERFACE thir_party/glad)
 
 include_directories(third_party/stb)
 
-target_link_libraries(${PROJECT_NAME} Ws2_32.lib)
+add_subdirectory(third_party/imgui)
+include_directories(third_party/imgui)
+target_link_libraries(${PROJECT_NAME} imgui)
+target_include_directories(${PROJECT_NAME} PUBLIC thir_party/imgui)
 
-add_compile_definitions(WUI_SRC_DIR=\"${PROJECT_SOURCE_DIR}/${PROJECT_NAME}/third_party/wui\")
+target_link_libraries(${PROJECT_NAME} Ws2_32.lib)

@@ -24,6 +24,12 @@
 
 #include "game/card.h"
 
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
+
+//TODO(asoelter): make imgui not a submodule. remove extra folders and include the main folders in the project
+
 INT WinMain(HINSTANCE hInstance,
             HINSTANCE hPrevInstance,
             PSTR      lpCmdLine,
@@ -48,9 +54,20 @@ INT WinMain(HINSTANCE hInstance,
     Card card(Card::Suit::Heart, Card::Number::Queen);
     card.translate({ 10.0f, 10.0f, 0.0f });
 
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    ImGui_ImplGlfw_InitForOpenGL(window.glfwWindow(), true);
+    ImGui_ImplOpenGL3_Init("#version 330 core");
+    ImGui::StyleColorsDark();
+
     while(window.isOpen())
     {
         window.beginFrame();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
         program.bind();
         program.setUniform("model", card.mesh().matrix());
@@ -67,6 +84,13 @@ INT WinMain(HINSTANCE hInstance,
         vao.bind();
         twoOfDiamonds.prepareToRender();
         renderer.render(twoOfDiamonds.mesh());
+
+        ImGui::Begin("Demo window");
+        ImGui::Button("hello");
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         window.endFrame();
     }

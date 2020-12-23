@@ -27,6 +27,11 @@ public:
 
     void setBackgroundColor(const Color& color);
 
+    //NOTE(asoelter): This is a debug function for
+    //integrating imgui. Should be removed once
+    //imgui is settled
+    GLFWwindow* glfwWindow() { return window_; }
+
 private:
     static void onResize(GLFWwindow* window, int width, int height);
     static void processInput(GLFWwindow* window);

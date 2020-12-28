@@ -1,9 +1,6 @@
 [submodule "pitch_frontend/third_party/covid"]
 	path = pitch_frontend/third_party/covid
 	url = https://github.com/Asoelter/covid.git
-[submodule "pitch_frontend/third_party/projectY"]
-	path = pitch_frontend/third_party/projectY
-	url = https://github.com/Asoelter/projectY.git
 [submodule "pitch_frontend/third_party/glfw"]
 	path = pitch_frontend/third_party/glfw
 	url = https://github.com/glfw/glfw.git

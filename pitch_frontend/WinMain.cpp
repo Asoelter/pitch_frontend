@@ -23,12 +23,11 @@
 #include "core/util/resource_loader.h"
 
 #include "game/card.h"
+#include "game/start_menu.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
-
-//TODO(asoelter): make imgui not a submodule. remove extra folders and include the main folders in the project
 
 INT WinMain(HINSTANCE hInstance,
             HINSTANCE hPrevInstance,
@@ -54,43 +53,33 @@ INT WinMain(HINSTANCE hInstance,
     Card card(Card::Suit::Heart, Card::Number::Queen);
     card.translate({ 10.0f, 10.0f, 0.0f });
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    ImGui_ImplGlfw_InitForOpenGL(window.glfwWindow(), true);
-    ImGui_ImplOpenGL3_Init("#version 330 core");
-    ImGui::StyleColorsDark();
+    bool playingGame = true;
+    StartMenu startMenu(window);
 
     while(window.isOpen())
     {
         window.beginFrame();
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        if (playingGame)
+        {
+            program.bind();
+            program.setUniform("model", card.mesh().matrix());
+            program.setUniform("view", camera.view());
+            program.setUniform("projection", camera.projection());
+            vao.bind();
+            card.prepareToRender();
+            renderer.render(card.mesh());
 
-        program.bind();
-        program.setUniform("model", card.mesh().matrix());
-        program.setUniform("view", camera.view());
-        program.setUniform("projection", camera.projection());
-        vao.bind();
-        card.prepareToRender();
-        renderer.render(card.mesh());
+            program.bind();
+            program.setUniform("model", twoOfDiamonds.mesh().matrix());
+            program.setUniform("view", camera.view());
+            program.setUniform("projection", camera.projection());
+            vao.bind();
+            twoOfDiamonds.prepareToRender();
+            renderer.render(twoOfDiamonds.mesh());
+        }
 
-        program.bind();
-        program.setUniform("model", twoOfDiamonds.mesh().matrix());
-        program.setUniform("view", camera.view());
-        program.setUniform("projection", camera.projection());
-        vao.bind();
-        twoOfDiamonds.prepareToRender();
-        renderer.render(twoOfDiamonds.mesh());
-
-        ImGui::Begin("Demo window");
-        ImGui::Button("hello");
-        ImGui::End();
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        startMenu.show();
 
         window.endFrame();
     }

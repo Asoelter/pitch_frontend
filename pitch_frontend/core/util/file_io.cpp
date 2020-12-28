@@ -131,6 +131,7 @@ FileType typeOf(const std::string& fileName)
 TextureInfo loadTextureInfo(const std::string& fileName)
 {
     TextureInfo result;
+    stbi_set_flip_vertically_on_load(true); //<TODO: make this dependent on file extension
     result.data = stbi_load(fileName.c_str(), &result.width, &result.height, &result.channelCount, 0);
 
     if(!result.data)

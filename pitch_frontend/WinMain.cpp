@@ -66,7 +66,7 @@ INT WinMain(HINSTANCE hInstance,
             program.setUniform("model", card.mesh().matrix());
             program.setUniform("view", camera.view());
             program.setUniform("projection", camera.projection());
-            vao.bind();
+            //vao.bind();
             card.prepareToRender();
             renderer.render(card.mesh());
 
@@ -74,7 +74,7 @@ INT WinMain(HINSTANCE hInstance,
             program.setUniform("model", twoOfDiamonds.mesh().matrix());
             program.setUniform("view", camera.view());
             program.setUniform("projection", camera.projection());
-            vao.bind();
+            //vao.bind();
             twoOfDiamonds.prepareToRender();
             renderer.render(twoOfDiamonds.mesh());
         }

@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (pitch_frontend WIN32 "WinMain.cpp"  "game/card.h" "game/card.cpp" "game/start_menu.h" "game/start_menu.cpp" "game/socket_thread.h" "game/socket_thread.cpp" "game/messages.h" "game/messages.cpp" "core/container/locked_message_queue.h" "core/container/locked_message_queue.hpp")
+add_executable (pitch_frontend WIN32 "WinMain.cpp"  "game/card.h" "game/card.cpp" "game/start_menu.h" "game/start_menu.cpp" "game/socket_thread.h" "game/socket_thread.cpp" "pitch_common/messages.h" "pitch_common/messages.cpp" "core/container/locked_message_queue.h" "core/container/locked_message_queue.hpp" "pitch_common/card_enums.h")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_compile_definitions(DEBUG=1)
@@ -41,6 +41,7 @@ target_link_libraries(${PROJECT_NAME} glad)
 target_include_directories(${PROJECT_NAME} INTERFACE thir_party/glad)
 
 include_directories(third_party/stb)
+include_directories(pitch_common)
 
 add_subdirectory(third_party/imgui)
 include_directories(third_party/imgui)

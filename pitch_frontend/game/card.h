@@ -8,25 +8,11 @@
 
 #include <math/point.h>
 
+#include "card_enums.h"
+
 class Card
 {
 public:
-    enum class Suit : unsigned char
-    {
-        Heart,
-        Club,
-        Diamond,
-        Spade
-    };
-
-    enum class Number : unsigned char
-    {
-        Two, Three, Four,  Five,
-        Six, Seven, Eight, Nine,
-        Ten, Jack,  Queen, King,
-        Ace
-    };
-
     //TODO(asoelter): refactor this into the Number and Suit enums
     enum class JokerType : unsigned char
     {
@@ -34,7 +20,7 @@ public:
         Low
     };
 
-    Card(Suit suit, Number number);
+    Card(CardSuit suit, CardNumber number);
     Card(JokerType jokerType);
 
     void translate(const Vec3& direction);
@@ -54,8 +40,8 @@ public:
 private:
     struct NormalType
     {
-        Suit    suit;
-        Number  number;
+        CardSuit    suit;
+        CardNumber  number;
     };
 
     using Type = std::variant<NormalType, JokerType>;

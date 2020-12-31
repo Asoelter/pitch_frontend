@@ -5,12 +5,12 @@
 #include <util/resource_loader.h>
 
 std::vector<float> createCardVertices();
-std::string determineCardTexture(Card::Suit suit, Card::Number number);
+std::string determineCardTexture(CardSuit suit, CardNumber number);
 std::string determineCardTexture(Card::JokerType type);
-std::string toString(Card::Suit suit);
-std::string toString(Card::Number number);
+std::string toString(CardSuit suit);
+std::string toString(CardNumber number);
 
-Card::Card(Suit suit, Number number)
+Card::Card(CardSuit suit, CardNumber number)
     : mesh_(VertexBufferObject(createCardVertices(), { 3, 2 }))
     , texture_(ResourceLoader::loadTexture(determineCardTexture(suit, number)))
     , position_(0.0f, 0.0f, 0.0f)
@@ -55,10 +55,10 @@ int8_t Card::normalPointValue() const noexcept
 
     switch(normalTypeInfo->number)
     {
-        case Number::Jack:
-        case Number::Queen:
-        case Number::King:
-        case Number::Ace:
+        case CardNumber::Jack:
+        case CardNumber::Queen:
+        case CardNumber::King:
+        case CardNumber::Ace:
             return 1;
         default:
             return 0;
@@ -76,11 +76,11 @@ int8_t Card::gamePointValue() const noexcept
 
     switch(normalTypeInfo->number)
     {
-        case Number::Ten:   return 10;
-        case Number::Jack:  return 1;
-        case Number::Queen: return 2;
-        case Number::King:  return 3;
-        case Number::Ace:   return 4;
+        case CardNumber::Ten:   return 10;
+        case CardNumber::Jack:  return 1;
+        case CardNumber::Queen: return 2;
+        case CardNumber::King:  return 3;
+        case CardNumber::Ace:   return 4;
         default:            return 0;
     }
 }
@@ -116,11 +116,11 @@ std::vector<float> createCardVertices()
     };
 }
 
-std::string determineCardTexture(Card::Suit suit, Card::Number number)
+std::string determineCardTexture(CardSuit suit, CardNumber number)
 {
     std::string suffix = ".png";
 
-    if(number > Card::Number::Ten)
+    if(number > CardNumber::Ten)
     {
         suffix = "2.png";
     }
@@ -138,36 +138,36 @@ std::string determineCardTexture(Card::JokerType type)
     return "low_joker.png";
 }
 
-std::string toString(Card::Suit suit)
+std::string toString(CardSuit suit)
 {
     switch(suit)
     {
-        case Card::Suit::Heart:     return "hearts";
-        case Card::Suit::Club:      return "clubs";
-        case Card::Suit::Diamond:   return "diamonds";
-        case Card::Suit::Spade:     return "spade";
+        case CardSuit::Heart:     return "hearts";
+        case CardSuit::Club:      return "clubs";
+        case CardSuit::Diamond:   return "diamonds";
+        case CardSuit::Spade:     return "spade";
     }
 
     throw std::runtime_error("Unknown Suit");
 }
 
-std::string toString(Card::Number number)
+std::string toString(CardNumber number)
 {
     switch(number)
     {
-        case Card::Number::Two:     return "2";
-        case Card::Number::Three:   return "3";
-        case Card::Number::Four:    return "4";
-        case Card::Number::Five:    return "5";
-        case Card::Number::Six:     return "6";
-        case Card::Number::Seven:   return "7";
-        case Card::Number::Eight:   return "8";
-        case Card::Number::Nine:    return "9";
-        case Card::Number::Ten:     return "10";
-        case Card::Number::Jack:    return "jack";
-        case Card::Number::Queen:   return "queen";
-        case Card::Number::King:    return "king";
-        case Card::Number::Ace:     return "ace";
+        case CardNumber::Two:     return "2";
+        case CardNumber::Three:   return "3";
+        case CardNumber::Four:    return "4";
+        case CardNumber::Five:    return "5";
+        case CardNumber::Six:     return "6";
+        case CardNumber::Seven:   return "7";
+        case CardNumber::Eight:   return "8";
+        case CardNumber::Nine:    return "9";
+        case CardNumber::Ten:     return "10";
+        case CardNumber::Jack:    return "jack";
+        case CardNumber::Queen:   return "queen";
+        case CardNumber::King:    return "king";
+        case CardNumber::Ace:     return "ace";
     }
 
     throw std::runtime_error("Unknown card number");

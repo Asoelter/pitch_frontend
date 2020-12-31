@@ -4,3 +4,6 @@
 [submodule "pitch_frontend/third_party/glfw"]
 	path = pitch_frontend/third_party/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "pitch_frontend/pitch_common"]
+	path = pitch_frontend/pitch_common
+	url = https://github.com/Asoelter/pitch_common.git

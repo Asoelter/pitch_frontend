@@ -23,9 +23,10 @@
 #include "core/util/resource_loader.h"
 
 #include "game/card.h"
-#include "game/messages.h"
 #include "game/start_menu.h"
 #include "game/socket_thread.h"
+
+#include "messages.h"
 
 INT WinMain(HINSTANCE hInstance,
             HINSTANCE hPrevInstance,
@@ -44,10 +45,10 @@ INT WinMain(HINSTANCE hInstance,
     Renderer renderer;
     Camera camera(Camera::Orientation::normalOrientation(0.3f), {0.0f, 20.0f, 0.0f, 20.0f, -20.0f, 20.0f});
 
-    Card twoOfDiamonds(Card::Suit::Diamond, Card::Number::Two);
+    Card twoOfDiamonds(CardSuit::Diamond, CardNumber::Two);
     twoOfDiamonds.translate({ 5.0f, 5.0f, 0.0f });
 
-    Card card(Card::Suit::Heart, Card::Number::Queen);
+    Card card(CardSuit::Heart, CardNumber::Queen);
     card.translate({ 10.0f, 10.0f, 0.0f });
 
     StartMenu startMenu(window);

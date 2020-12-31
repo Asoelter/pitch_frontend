@@ -6,3 +6,4 @@ project("game")
 add_library(${PROJECT_NAME} "card.h" "card.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../)
+include_directories(../pitch_common)

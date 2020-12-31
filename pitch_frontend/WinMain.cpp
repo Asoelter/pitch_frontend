@@ -23,18 +23,15 @@
 #include "core/util/resource_loader.h"
 
 #include "game/card.h"
+#include "game/messages.h"
 #include "game/start_menu.h"
-
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_glfw.h>
-#include <imgui/imgui_impl_opengl3.h>
+#include "game/socket_thread.h"
 
 INT WinMain(HINSTANCE hInstance,
             HINSTANCE hPrevInstance,
             PSTR      lpCmdLine,
             INT       nCmdShow)
 {
-
     Window window(800, 600, "Pitch");
     window.setBackgroundColor(Color(0.2f, 0.3f, 0.3f, 1.0f));
 
@@ -53,35 +50,40 @@ INT WinMain(HINSTANCE hInstance,
     Card card(Card::Suit::Heart, Card::Number::Queen);
     card.translate({ 10.0f, 10.0f, 0.0f });
 
-    bool playingGame = true;
     StartMenu startMenu(window);
+
+    while(window.isOpen() && !startMenu.userHasSubmitted())
+    {
+        window.beginFrame();
+        startMenu.show();
+        window.endFrame();
+    }
+
+    auto socketThread = SocketThread(startMenu.ipAddress(), startMenu.portNumber());
 
     while(window.isOpen())
     {
         window.beginFrame();
 
-        if (playingGame)
-        {
-            program.bind();
-            program.setUniform("model", card.mesh().matrix());
-            program.setUniform("view", camera.view());
-            program.setUniform("projection", camera.projection());
-            //vao.bind();
-            card.prepareToRender();
-            renderer.render(card.mesh());
+        program.bind();
+        program.setUniform("model", card.mesh().matrix());
+        program.setUniform("view", camera.view());
+        program.setUniform("projection", camera.projection());
+        vao.bind();
+        card.prepareToRender();
+        renderer.render(card.mesh());
 
-            program.bind();
-            program.setUniform("model", twoOfDiamonds.mesh().matrix());
-            program.setUniform("view", camera.view());
-            program.setUniform("projection", camera.projection());
-            //vao.bind();
-            twoOfDiamonds.prepareToRender();
-            renderer.render(twoOfDiamonds.mesh());
-        }
-
-        startMenu.show();
+        program.bind();
+        program.setUniform("model", twoOfDiamonds.mesh().matrix());
+        program.setUniform("view", camera.view());
+        program.setUniform("projection", camera.projection());
+        vao.bind();
+        twoOfDiamonds.prepareToRender();
+        renderer.render(twoOfDiamonds.mesh());
 
         window.endFrame();
+
+        socketThread.sendMessage(PlayerReadyMessage());
     }
 
     return 0;

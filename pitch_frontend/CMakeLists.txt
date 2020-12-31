@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (pitch_frontend WIN32 "WinMain.cpp"  "game/card.h" "game/card.cpp" "game/start_menu.h" "game/start_menu.cpp")
+add_executable (pitch_frontend WIN32 "WinMain.cpp"  "game/card.h" "game/card.cpp" "game/start_menu.h" "game/start_menu.cpp" "game/socket_thread.h" "game/socket_thread.cpp" "game/messages.h" "game/messages.cpp" "core/container/locked_message_queue.h" "core/container/locked_message_queue.hpp")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_compile_definitions(DEBUG=1)

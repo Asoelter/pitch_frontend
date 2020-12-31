@@ -11,7 +11,7 @@
 class Card
 {
 public:
-    enum class Suit
+    enum class Suit : unsigned char
     {
         Heart,
         Club,
@@ -19,7 +19,7 @@ public:
         Spade
     };
 
-    enum class Number
+    enum class Number : unsigned char
     {
         Two, Three, Four,  Five,
         Six, Seven, Eight, Nine,
@@ -27,7 +27,8 @@ public:
         Ace
     };
 
-    enum class JokerType
+    //TODO(asoelter): refactor this into the Number and Suit enums
+    enum class JokerType : unsigned char
     {
         High,
         Low

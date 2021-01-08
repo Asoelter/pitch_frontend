@@ -61,6 +61,7 @@ INT WinMain(HINSTANCE hInstance,
     }
 
     auto socketThread = SocketThread(startMenu.ipAddress(), startMenu.portNumber());
+    socketThread.sendMessage(PlayerReadyMessage());
 
     while(window.isOpen())
     {
@@ -83,8 +84,6 @@ INT WinMain(HINSTANCE hInstance,
         renderer.render(twoOfDiamonds.mesh());
 
         window.endFrame();
-
-        socketThread.sendMessage(PlayerReadyMessage());
     }
 
     return 0;

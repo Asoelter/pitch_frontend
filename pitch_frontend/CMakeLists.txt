@@ -4,12 +4,14 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (pitch_frontend WIN32 "WinMain.cpp"  "game/card.h" "game/card.cpp" "game/start_menu.h" "game/start_menu.cpp" "game/socket_thread.h" "game/socket_thread.cpp" "pitch_common/messages.h" "pitch_common/messages.cpp" "core/container/locked_message_queue.h" "core/container/locked_message_queue.hpp" "pitch_common/card_enums.h")
+add_executable (pitch_frontend WIN32 "WinMain.cpp" )#"pitch_common/messages.h" "pitch_common/messages.cpp" "core/container/locked_message_queue.h" "core/container/locked_message_queue.hpp" "pitch_common/card_enums.h" "game/player.h" "game/player_hand.h")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_compile_definitions(DEBUG=1)
+	add_compile_definitions(RELEASE=0)
 else()
 	add_compile_definitions(DEBUG=0)
+	add_compile_definitions(RELEASE=1)
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 add_compile_definitions(PITCH_SHADER_DIRECTORY="${PROJECT_SOURCE_DIR}/pitch_frontend/res/shaders")
@@ -32,6 +34,16 @@ include_directories(core)
 target_link_libraries(${PROJECT_NAME} core)
 target_include_directories(${PROJECT_NAME} PUBLIC core)
 
+add_subdirectory(game)
+include_directories(game)
+target_link_libraries(${PROJECT_NAME} game)
+target_include_directories(${PROJECT_NAME} PUBLIC game)
+
+add_subdirectory(pitch_common)
+include_directories(pitch_common)
+target_link_libraries(${PROJECT_NAME} pitch_common)
+target_include_directories(${PROJECT_NAME} PUBLIC pitch_common)
+
 add_subdirectory(third_party/glad)
 include_directories(third_party/glad/include)
 include_directories(third_party/glad/src)
@@ -41,7 +53,6 @@ target_link_libraries(${PROJECT_NAME} glad)
 target_include_directories(${PROJECT_NAME} INTERFACE thir_party/glad)
 
 include_directories(third_party/stb)
-include_directories(pitch_common)
 
 add_subdirectory(third_party/imgui)
 include_directories(third_party/imgui)

@@ -40,12 +40,12 @@ private:
     using MessageQueue = LockedMessageQueue<MessageType>;
 
     static void socketMain(std::string ipAddress,     std::string portNumber, 
-                           MessageQueue& sendBuffer, MessageQueue& receiveBuffer);
+                           MessageQueue& sendBuffer,  MessageQueue& receiveBuffer);
 
 private:
-    LockedMessageQueue<MessageType> sendBuffer_;
-    LockedMessageQueue<MessageType> receiveBuffer_;
-    std::thread                     thread_;
+    MessageQueue sendBuffer_;
+    MessageQueue receiveBuffer_;
+    std::thread  thread_;
 };
 
 #endif //SOCKET_THREAD_H

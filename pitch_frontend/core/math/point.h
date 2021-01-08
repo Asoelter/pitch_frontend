@@ -30,6 +30,4 @@ using Point3D = Point<3>;
 
 #include "point.hpp"
 
-#undef IS_DEBUG_MODE
-
 #endif //POINT_H

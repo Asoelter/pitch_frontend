@@ -8,13 +8,22 @@
 bool StartMenu::initialized = false;
 
 StartMenu::StartMenu(Window& renderWindow)
-    : submitted_(false)
+#if DEBUG
+    : ipAddress_("127.0.0.1")
+    , portNumber_("49152")
+    ,
+#else
+    :
+#endif
+      submitted_(false)
     , inMainMenu_(true)
     , inJoinMenu_(false)
     , inHostMenu_(false)
 {
+#if RELEASE
     memset(ipAddress_, 0, 16);
     memset(portNumber_, 0, 16);
+#endif
 
     if(!initialized)
     {

@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (pitch_frontend WIN32 "WinMain.cpp" )#"pitch_common/messages.h" "pitch_common/messages.cpp" "core/container/locked_message_queue.h" "core/container/locked_message_queue.hpp" "pitch_common/card_enums.h" "game/player.h" "game/player_hand.h")
+add_executable (pitch_frontend WIN32 "WinMain.cpp" )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_compile_definitions(DEBUG=1)
@@ -19,20 +19,24 @@ add_compile_definitions(PITCH_TEXTURE_DIRECTORY="${PROJECT_SOURCE_DIR}/pitch_fro
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
-add_subdirectory(third_party/covid)
-include_directories(third_party/covid)
-target_link_libraries(${PROJECT_NAME} covid)
-target_include_directories(${PROJECT_NAME} PUBLIC thir_party/covid)
+function(addDirectory dir)
+	add_subdirectory(${dir})
+	include_directories(${dir})
+	target_link_libraries(${PROJECT_NAME} ${dir})
+	target_include_directories(${PROJECT_NAME} PUBLIC ${dir})
+endfunction()
 
-add_subdirectory(third_party/glfw)
-include_directories(third_party/glfw)
-target_link_libraries(${PROJECT_NAME} glfw)
-target_include_directories(${PROJECT_NAME} PUBLIC thir_party/glfw)
+function(addThirdParty dir)
+	add_subdirectory(third_party/${dir})
+	include_directories(third_party/${dir})
+	target_link_libraries(${PROJECT_NAME} ${dir})
+	target_include_directories(${PROJECT_NAME} PUBLIC thir_party/${dir})
+endfunction()
 
-add_subdirectory(core)
-include_directories(core)
-target_link_libraries(${PROJECT_NAME} core)
-target_include_directories(${PROJECT_NAME} PUBLIC core)
+addThirdParty(covid)
+addThirdParty(glfw)
+
+addDirectory(core)
 
 add_subdirectory(game)
 include_directories(game)

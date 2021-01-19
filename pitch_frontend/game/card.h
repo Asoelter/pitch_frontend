@@ -23,6 +23,8 @@ public:
     Card(CardSuit suit, CardNumber number);
     Card(JokerType jokerType);
 
+    bool is(CardSuit suit, CardNumber number) const noexcept;
+
     void translate(const Vec3& direction);
     void rotate(Radian radians);
     void rotate(Degree degrees);
@@ -49,11 +51,12 @@ private:
     bool isJoker() const;
 
 private:
-
-    Mesh    mesh_;
-    Texture texture_;
-    Point3D position_;
-    Type    type_;
+    CardSuit    suit_;
+    CardNumber  number_;
+    Mesh        mesh_;
+    Texture     texture_;
+    Point3D     position_;
+    Type        type_;
 };
 
 #endif //CARD_H

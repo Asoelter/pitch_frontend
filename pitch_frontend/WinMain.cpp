@@ -8,8 +8,6 @@
 
 #include <Windows.h>
 
-#include <covid/socket.h>
-
 #include "core/graphics/camera.h"
 #include "core/graphics/mesh.h"
 #include "core/graphics/renderer.h"

@@ -11,7 +11,9 @@ std::string toString(CardSuit suit);
 std::string toString(CardNumber number);
 
 Card::Card(CardSuit suit, CardNumber number)
-    : mesh_(VertexBufferObject(createCardVertices(), { 3, 2 }))
+    : suit_(suit)
+    , number_(number)
+    , mesh_(VertexBufferObject(createCardVertices(), { 3, 2 }))
     , texture_(ResourceLoader::loadTexture(determineCardTexture(suit, number)))
     , position_(0.0f, 0.0f, 0.0f)
     , type_(NormalType{ suit, number })
@@ -25,7 +27,12 @@ Card::Card(JokerType jokerType)
     , position_(0.0f, 0.0f, 0.0f)
     , type_(jokerType)
 {
-    
+    assert(false && "This needs to be updated once jokers are integrated with card enums");
+}
+
+bool Card::is(CardSuit suit, CardNumber number) const noexcept
+{
+    return suit_ == suit && number_ == number;
 }
 
 void Card::translate(const Vec3& direction)

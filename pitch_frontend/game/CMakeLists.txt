@@ -5,7 +5,8 @@ project("game")
 # Add source to this project's executable.
 add_library(${PROJECT_NAME} "card.h"			"card.cpp" 
 							"start_menu.h"		"start_menu.cpp" 
-							"socket_thread.h"	"socket_thread.cpp")
+							"socket_thread.h"	"socket_thread.cpp" 
+									 "player.cpp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ../)
 include_directories(../pitch_common)

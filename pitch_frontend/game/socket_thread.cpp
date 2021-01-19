@@ -32,7 +32,7 @@ std::vector<char> SocketThread::message() noexcept
 void SocketThread::socketMain(std::string ipAddress,     std::string portNumber, 
                               MessageQueue& sendBuffer, MessageQueue& receiveBuffer)
 {
-    Socket socket = Socket::connectTo(Port(ipAddress, portNumber));
+    const auto socket = Socket::connectTo(Port(ipAddress, portNumber));
 
     while(true)
     {
@@ -43,8 +43,11 @@ void SocketThread::socketMain(std::string ipAddress,     std::string portNumber,
             socket.send(possibleMessageToSend.value());
         }
 
-        const auto messageReceivedInBytes = socket.receive();
-        const auto messageReceived = std::string(messageReceivedInBytes.begin(), messageReceivedInBytes.end());
-        MessageBox(NULL, messageReceived.c_str(), messageReceived.c_str(), 0);
+        if(socket.hasMessageWaiting())
+        {
+            const auto messageReceivedInBytes = socket.receive();
+            const auto messageReceived = std::string(messageReceivedInBytes.begin(), messageReceivedInBytes.end());
+            MessageBox(NULL, messageReceived.c_str(), messageReceived.c_str(), 0);
+        }
     }
 }

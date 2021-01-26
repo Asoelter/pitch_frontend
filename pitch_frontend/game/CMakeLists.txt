@@ -21,6 +21,6 @@ include_directories(../third_party/glfw)
 include_directories(../third_party/glfw/include)
 
 #This also feels like a hack
-include_directories(../third_party/imgui)
-target_link_libraries(${PROJECT_NAME} imgui)
-target_include_directories(${PROJECT_NAME} INTERFACE ../thir_party/imgui)
+include_directories(../third_party/pitch_imgui)
+target_link_libraries(${PROJECT_NAME} pitch_imgui)
+target_include_directories(${PROJECT_NAME} INTERFACE ../thir_party/pitch_imgui)

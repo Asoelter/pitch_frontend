@@ -22,7 +22,8 @@ TextureInfo::TextureInfo(const TextureInfo& rhs)
     {
         const auto size = std::strlen(reinterpret_cast<const char*>(rhs.data));
         data = new unsigned char[size];
-        std::strcpy(reinterpret_cast<char*>(data), reinterpret_cast<char*>(rhs.data));
+        strcpy_s(reinterpret_cast<char*>(data), size, reinterpret_cast<char*>(rhs.data));
+        //std::strcpy(reinterpret_cast<char*>(data), reinterpret_cast<char*>(rhs.data));
     }
 }
 

@@ -2,7 +2,7 @@
 
 #include <covid/socket.h>
 
-#pragma message("This is a temporary include!!!")
+#pragma message("game/socket_thread.cpp(5): This is a temporary include!!!")
 #include <Windows.h>
 
 SocketThread::SocketThread(const std::string& ipAddress, const std::string& portNumber)

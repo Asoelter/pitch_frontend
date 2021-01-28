@@ -45,6 +45,18 @@ Window::~Window()
     glfwTerminate(); 
 }
 
+[[nodiscard]]
+int Window::width() const noexcept
+{
+    return width_;
+}
+
+[[nodiscard]]
+int Window::height() const noexcept
+{
+    return height_;
+}
+
 void Window::beginFrame() noexcept
 {
     processInput(window_);

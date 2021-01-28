@@ -63,6 +63,26 @@ void Camera::zoom(float scale)
     zoomScale_ = scale;
 }
 
+[[nodiscard]] float Camera::xmin()
+{
+    return bounds_.xmin;
+}
+
+[[nodiscard]] float Camera::xmax()
+{
+    return bounds_.xmax;
+}
+
+[[nodiscard]] float Camera::ymin()
+{
+    return bounds_.ymin;
+}
+
+[[nodiscard]] float Camera::ymax()
+{
+    return bounds_.ymax;
+}
+
 Mat4 Camera::view() const noexcept
 {
     return Mat4::lookAt(orientation_.eye, 

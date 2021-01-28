@@ -7,8 +7,6 @@
 std::vector<float> createCardVertices();
 std::string determineCardTexture(CardSuit suit, CardNumber number);
 std::string determineCardTexture(Card::JokerType type);
-std::string toString(CardSuit suit);
-std::string toString(CardNumber number);
 
 Card::Card(CardSuit suit, CardNumber number)
     : suit_(suit)
@@ -49,6 +47,24 @@ void Card::rotate(Radian radians)
 void Card::rotate(Degree degrees)
 {
     mesh_.rotate({ 0.0f, 0.0f, 1.0f }, degrees);
+}
+
+void Card::setPosition(const Point2D& newPosition)
+{
+    const auto newPosition3D = Point3D(newPosition.x(), newPosition.y(), 0.0f);
+    const auto direction = newPosition3D - position_;
+
+    translate(direction);
+}
+
+CardSuit Card::suit() const noexcept
+{
+    return suit_;
+}
+
+CardNumber Card::number() const noexcept
+{
+    return number_;
 }
 
 int8_t Card::normalPointValue() const noexcept
@@ -111,6 +127,18 @@ bool Card::isJoker() const
 
 std::vector<float> createCardVertices()
 {
+    constexpr auto halfWidth = Card::width / 2.0f;
+    constexpr auto halfHeight= Card::height / 2.0f;
+
+    return {
+        -1.0f * halfWidth, -1.0f * halfHeight, 0.0f,  0.0f, 0.0f, //bottom left
+         1.0f * halfWidth, -1.0f * halfHeight, 0.0f,  1.0f, 0.0f, //bottom right
+        -1.0f * halfWidth,  1.0f * halfHeight, 0.0f,  0.0f, 1.0f, //top left
+
+         1.0f * halfWidth, -1.0f * halfHeight, 0.0f,  1.0f, 0.0f, //bottom right
+         1.0f * halfWidth,  1.0f * halfHeight, 0.0f,  1.0f, 1.0f, //top right
+        -1.0f * halfWidth,  1.0f * halfHeight, 0.0f,  0.0f, 1.0f  //top left
+    };
     
     return {
         -1.5f, -2.0f, 0.0f,  0.0f, 0.0f, //bottom left
@@ -127,7 +155,7 @@ std::string determineCardTexture(CardSuit suit, CardNumber number)
 {
     std::string suffix = ".png";
 
-    if(number > CardNumber::Ten)
+    if(number > CardNumber::Ten && number != CardNumber::Ace)
     {
         suffix = "2.png";
     }
@@ -143,39 +171,4 @@ std::string determineCardTexture(Card::JokerType type)
     }
 
     return "low_joker.png";
-}
-
-std::string toString(CardSuit suit)
-{
-    switch(suit)
-    {
-        case CardSuit::Heart:     return "hearts";
-        case CardSuit::Club:      return "clubs";
-        case CardSuit::Diamond:   return "diamonds";
-        case CardSuit::Spade:     return "spade";
-    }
-
-    throw std::runtime_error("Unknown Suit");
-}
-
-std::string toString(CardNumber number)
-{
-    switch(number)
-    {
-        case CardNumber::Two:     return "2";
-        case CardNumber::Three:   return "3";
-        case CardNumber::Four:    return "4";
-        case CardNumber::Five:    return "5";
-        case CardNumber::Six:     return "6";
-        case CardNumber::Seven:   return "7";
-        case CardNumber::Eight:   return "8";
-        case CardNumber::Nine:    return "9";
-        case CardNumber::Ten:     return "10";
-        case CardNumber::Jack:    return "jack";
-        case CardNumber::Queen:   return "queen";
-        case CardNumber::King:    return "king";
-        case CardNumber::Ace:     return "ace";
-    }
-
-    throw std::runtime_error("Unknown card number");
 }

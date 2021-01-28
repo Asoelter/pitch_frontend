@@ -19,6 +19,9 @@ public:
     Window& operator=(const Window&) = delete;
     Window& operator=(Window&&) = delete;
 
+    [[nodiscard]] int width() const noexcept;
+    [[nodiscard]] int height() const noexcept;
+
     void beginFrame() noexcept;
     void endFrame() noexcept;
 

@@ -20,6 +20,7 @@
 
 #include "core/util/resource_loader.h"
 
+#include "game/bid_menu.h"
 #include "game/card.h"
 #include "game/start_menu.h"
 #include "game/socket_thread.h"
@@ -60,6 +61,9 @@ INT WinMain(HINSTANCE hInstance,
 
     auto socketThread = SocketThread(startMenu.ipAddress(), startMenu.portNumber());
     socketThread.sendMessage(PlayerReadyMessage());
+    std::vector<std::optional<Card>> hand;
+    BidMenu bidMenu;
+    bool showBidMenu = false;
 
     while(window.isOpen())
     {
@@ -81,7 +85,63 @@ INT WinMain(HINSTANCE hInstance,
         twoOfDiamonds.prepareToRender();
         renderer.render(twoOfDiamonds.mesh());
 
+        int index = 0;
+        constexpr auto padBetweenCards = 0.1f;
+
+        for(auto& cardInHand : hand)
+        {
+            if(cardInHand)
+            {
+                constexpr auto originalXOffset = 2.0f;
+                const auto xOffset = originalXOffset + ((index) * (Card::width / 2.0f)) + (index * padBetweenCards);
+                const auto yOffset = (camera.ymax() + camera.ymin()) / 2.0f;
+                cardInHand->setPosition({xOffset, yOffset});
+                ++index;
+                program.bind();
+                program.setUniform("model", cardInHand->mesh().matrix());
+                program.setUniform("view", camera.view());
+                program.setUniform("projection", camera.projection());
+                vao.bind();
+                cardInHand->prepareToRender();
+                renderer.render(cardInHand->mesh());
+            }
+        }
+
+        if(showBidMenu)
+        {
+            bidMenu.setHand(hand);
+            bidMenu.show();
+        }
+
         window.endFrame();
+
+        const auto message = socketThread.message();
+
+        if(message)
+        {
+            const auto messageId = std::visit(ExtractId{}, message.value());
+
+            switch(messageId)
+            {
+                case MessageId::PlayerReady:            break;
+                case MessageId::AcknowledgePlayerReady: break;
+                case MessageId::PlayedCard:
+                {
+                    auto messageVariant = message.value();
+                    auto playedCardMessage = std::get_if<PlayedCardMessage>(&messageVariant);
+
+                    if(playedCardMessage)
+                    {
+                        hand.push_back(Card(playedCardMessage->suit, playedCardMessage->number));
+                    }
+                }break;
+                case MessageId::PromptBid:
+                {
+                    showBidMenu = true;
+                }break;
+            }
+        }
+
     }
 
     return 0;

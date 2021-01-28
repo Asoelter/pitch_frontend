@@ -29,6 +29,10 @@ public:
     void rotate(Radian radians);
     void rotate(Degree degrees);
 
+    void setPosition(const Point2D& newPosition);
+
+    CardSuit suit() const noexcept;
+    CardNumber number() const noexcept;
     int8_t normalPointValue() const noexcept;
     int8_t gamePointValue() const noexcept;
 

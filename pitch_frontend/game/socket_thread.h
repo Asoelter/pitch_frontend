@@ -8,8 +8,10 @@
 
 #include <container/locked_message_queue.h>
 
+#include "messages.h"
+
 template<typename T>
-concept Message = requires(T m)
+concept MessageC = requires(T m)
 {
     {m.serialize()} -> std::convertible_to<std::vector<char>>;
 };
@@ -28,22 +30,23 @@ public:
     SocketThread& operator=(SocketThread&&) = delete;
 
     bool hasMessageWaiting() noexcept;
-    std::vector<char> message() noexcept;
+    std::optional<Message> message() noexcept;
 
-    template<Message M>
+    template<MessageC M>
     void sendMessage(const M& value)
     {
         sendBuffer_.push(value.serialize());
     }
 
 private:
-    using MessageQueue = LockedMessageQueue<MessageType>;
+    using RawMessageQueue = LockedMessageQueue<MessageType>;
+    using MessageQueue = LockedMessageQueue<Message>;
 
-    static void socketMain(std::string ipAddress,     std::string portNumber, 
-                           MessageQueue& sendBuffer,  MessageQueue& receiveBuffer);
+    static void socketMain(std::string ipAddress,        std::string portNumber, 
+                           RawMessageQueue& sendBuffer,  MessageQueue& receiveBuffer);
 
 private:
-    MessageQueue sendBuffer_;
+    RawMessageQueue sendBuffer_;
     MessageQueue receiveBuffer_;
     std::thread  thread_;
 };
